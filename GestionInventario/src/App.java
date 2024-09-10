@@ -7,7 +7,7 @@ public class App {
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("Hello World from Swing");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setSize(600, 400);
+            frame.setSize(500, 400);
             frame.add(new JLabel("Hello, World from Swing!", JLabel.CENTER));
             frame.setVisible(true);
         });
