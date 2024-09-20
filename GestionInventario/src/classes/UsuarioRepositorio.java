@@ -8,6 +8,10 @@ public class UsuarioRepositorio {
     public static void crearUsuario(Usuario usuario) {
         usuarios.add(usuario);
     }
+    static {
+        crearUsuario(new Usuario(1, "Juan", "Perez", "CC", "12345", "juan@example.com", "3118776765", true));
+        crearUsuario(new Usuario(2, "Maria", "Lopez", "CC", "67890", "maria@example.com", "3213322232", true));
+    }
 
     public static void modificarUsuario(int id, Usuario usuarioModificado) {
         for (Usuario usuario : usuarios) {
