@@ -1,7 +1,4 @@
-import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
-import classes.*;
 import ui.LoginFrame;
 
 public class App {
