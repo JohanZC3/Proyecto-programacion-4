@@ -9,8 +9,9 @@ public class Usuario {
     private String direccion;
     private String telefono;
     private boolean estadoActivo;
+    private String password;
 
-    public Usuario(int id, String nombre, String apellido, String tipoDocumento, String numeroDocumento, String direccion, String telefono, boolean estadoActivo) {
+    public Usuario(int id, String nombre, String apellido, String tipoDocumento, String numeroDocumento, String direccion, String telefono, boolean estadoActivo, String password) {
         this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;
@@ -19,6 +20,7 @@ public class Usuario {
         this.direccion = direccion;
         this.telefono = telefono;
         this.estadoActivo = estadoActivo;
+        this.password = password;
     }
 
     public int getId() {
@@ -83,5 +85,13 @@ public class Usuario {
 
     public void setEstadoActivo(boolean estadoActivo) {
         this.estadoActivo = estadoActivo;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

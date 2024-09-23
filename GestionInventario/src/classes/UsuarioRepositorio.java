@@ -9,8 +9,8 @@ public class UsuarioRepositorio {
         usuarios.add(usuario);
     }
     static {
-        crearUsuario(new Usuario(1, "Juan", "Perez", "CC", "12345", "juan@example.com", "3118776765", true));
-        crearUsuario(new Usuario(2, "Maria", "Lopez", "CC", "67890", "maria@example.com", "3213322232", true));
+        crearUsuario(new Usuario(1, "Juan", "Perez", "CC", "12345", "juan@example.com", "3118776765", true, "pJuan123"));
+        crearUsuario(new Usuario(2, "Maria", "Lopez", "CC", "67890", "maria@example.com", "3213322232", true, "pMaria456"));
     }
 
     public static void modificarUsuario(int id, Usuario usuarioModificado) {
@@ -23,6 +23,7 @@ public class UsuarioRepositorio {
                 usuario.setDireccion(usuarioModificado.getDireccion());
                 usuario.setTelefono(usuarioModificado.getTelefono());
                 usuario.setEstadoActivo(usuarioModificado.isEstadoActivo());
+                usuario.setPassword(usuarioModificado.getPassword());
             }
         }
     }
