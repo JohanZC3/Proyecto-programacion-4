@@ -1,0 +1,1 @@
+[{"id":1,"nombre":"Producto 1","categoria":"Categoria 1","cantidad":10,"precioUnitario":100.0,"fechaExpiracion":"2024-12-31","proveedorId":1},{"id":2,"nombre":"Producto 2","categoria":"Categoria 2","cantidad":20,"precioUnitario":150.0,"fechaExpiracion":"2024-12-31","proveedorId":2}]
