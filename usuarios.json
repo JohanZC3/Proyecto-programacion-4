@@ -1,0 +1,1 @@
+[{"id":1,"nombre":"Juan","apellido":"Perez","tipoDocumento":"CC","numeroDocumento":"12345","direccion":"juan@example.com","telefono":"3118776765","estadoActivo":true,"password":"pJuan123"},{"id":2,"nombre":"Maria","apellido":"Lopez","tipoDocumento":"CC","numeroDocumento":"67890","direccion":"maria@example.com","telefono":"3213322232","estadoActivo":true,"password":"pMaria456"}]
