@@ -1,4 +1,7 @@
-package classes;
+package repositorios;
+
+import classes.LocalDateAdapter;
+import classes.Producto;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -14,12 +17,14 @@ import java.util.ArrayList;
 
 public class ProductoRepositorio {
     private static ArrayList<Producto> productos = new ArrayList<>();
-    private static final String ARCHIVO_JSON = "productos.json";
+    private static final String DATA_FOLDER = "GestionInventario/Data";
+    private static final String ARCHIVO_JSON = DATA_FOLDER + "/productos.json";
     private static final Gson gson = new GsonBuilder()
             .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
             .create();
 
     static {
+        verificarOCrearCarpetaData();
         cargarProductosDesdeJSON();
         if (productos.isEmpty()) {
             // Agregar datos de prueba
@@ -61,6 +66,15 @@ public class ProductoRepositorio {
         } catch (IOException e) {
             System.out.println("Error al cargar productos desde JSON: " + e.getMessage());
             productos = new ArrayList<>();
+        }
+    }
+
+    // Método para verificar y crear la carpeta "Data" si no existe
+    private static void verificarOCrearCarpetaData() {
+        File carpetaData = new File(DATA_FOLDER);
+        if (!carpetaData.exists()) {
+            carpetaData.mkdir();
+            System.out.println("Carpeta 'Data' creada.");
         }
     }
 }

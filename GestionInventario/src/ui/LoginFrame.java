@@ -1,12 +1,15 @@
 package ui;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-
-import classes.* ;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import servicios.UsuarioServicio;
 
 public class LoginFrame extends JFrame {
     private JTextField emailField;
@@ -21,14 +24,13 @@ public class LoginFrame extends JFrame {
     private JSeparator jSeparator2;
     private JButton loginButton;
 
-
     public LoginFrame() {
         usuarioServicio = new UsuarioServicio();
 
         setTitle("Login");
         setSize(450, 350);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBackground(new Color(255,255,255));
+        setBackground(new Color(255, 255, 255));
         setResizable(false);
         setLocationRelativeTo(null);
         setLayout(null);
@@ -36,11 +38,10 @@ public class LoginFrame extends JFrame {
         verticalGoldPanel = new JPanel();
         verticalGoldPanel.setBackground(new Color(199, 182, 145));
         verticalGoldPanel.setBounds(0, 0, 80, 315);
-        verticalGoldPanel.requestFocusInWindow();
         add(verticalGoldPanel);
 
         Welcome = new JLabel("Bienvenido!");
-        Welcome.setFont(new java.awt.Font("Franklin Gothic Demi", 1, 36)); 
+        Welcome.setFont(new java.awt.Font("Franklin Gothic Demi", 1, 36));
         Welcome.setForeground(new java.awt.Color(17, 59, 75));
         Welcome.setBounds(105, 10, 220, 40);
         add(Welcome);
@@ -55,25 +56,43 @@ public class LoginFrame extends JFrame {
         emailLabel.setBounds(105, 85, 110, 30);
         add(emailLabel);
 
-        emailField = new JTextField();
+        emailField = new JTextField("Ingrese aqui su correo");
         emailField.setBounds(105, 115, 300, 30);
         emailField.setBorder(null);
-        emailField.setText("Ingrese aqui su correo");
-        emailField.setFocusable(false);
+        emailField.setForeground(new Color(160, 160, 160));
+        emailField.setBackground(new Color(238, 238, 238));
         emailField.setFont(new java.awt.Font("Segoe UI", 0, 14));
-        emailField.setForeground(new java.awt.Color(160,160,160));
-        emailField.setBackground(new java.awt.Color(238,238,238));
         add(emailField);
 
-        emailField.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                emailFieldActionPerformed(evt);
+        emailField.addFocusListener(new FocusAdapter() {
+            public void focusGained(FocusEvent evt) {
+                if (emailField.getText().equals("Ingrese aqui su correo")) {
+                    emailField.setText("");
+                    emailField.setForeground(Color.BLACK);
+                }
+            }
+
+            public void focusLost(FocusEvent evt) {
+                if (emailField.getText().isEmpty()) {
+                    emailField.setText("Ingrese aqui su correo");
+                    emailField.setForeground(new Color(160, 160, 160));
+                }
+            }
+        });
+
+        // Mover foco a passwordField al presionar Enter
+        emailField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    passwordField.requestFocusInWindow();
+                }
             }
         });
 
         jSeparator1 = new JSeparator();
         jSeparator1.setPreferredSize(new java.awt.Dimension(600, 10));
-        jSeparator1.setForeground(new java.awt.Color(206,206,206));
+        jSeparator1.setForeground(new Color(206, 206, 206));
         jSeparator1.setBounds(105, 145, 300, 5);
         add(jSeparator1);
 
@@ -82,39 +101,57 @@ public class LoginFrame extends JFrame {
         passwordLabel.setBounds(105, 160, 110, 30);
         add(passwordLabel);
 
-        passwordField = new JPasswordField();
+        passwordField = new JPasswordField("********");
         passwordField.setBounds(105, 190, 300, 30);
         passwordField.setBorder(null);
-        passwordField.setText("********");
-        passwordField.setFocusable(false);
+        passwordField.setForeground(new Color(160, 160, 160));
+        passwordField.setBackground(new Color(238, 238, 238));
         passwordField.setFont(new java.awt.Font("Segoe UI", 0, 14));
-        passwordField.setForeground(new java.awt.Color(160,160,160));
-        passwordField.setBackground(new java.awt.Color(238,238,238));
         add(passwordField);
 
-        passwordField.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                passwordFieldActionPerformed(evt);
+        passwordField.addFocusListener(new FocusAdapter() {
+            public void focusGained(FocusEvent evt) {
+                if (String.valueOf(passwordField.getPassword()).equals("********")) {
+                    passwordField.setText("");
+                    passwordField.setForeground(Color.BLACK);
+                }
+            }
+
+            public void focusLost(FocusEvent evt) {
+                if (String.valueOf(passwordField.getPassword()).isEmpty()) {
+                    passwordField.setText("********");
+                    passwordField.setForeground(new Color(160, 160, 160));
+                }
+            }
+        });
+
+        // Ejecutar acción de loginButton al presionar Enter
+        passwordField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    loginButton.doClick();
+                }
             }
         });
 
         jSeparator2 = new JSeparator();
         jSeparator2.setPreferredSize(new java.awt.Dimension(600, 10));
-        jSeparator2.setForeground(new java.awt.Color(206,206,206));
+        jSeparator2.setForeground(new Color(206, 206, 206));
         jSeparator2.setBounds(105, 220, 300, 5);
         add(jSeparator2);
 
         loginButton = new JButton("Ingresar");
         loginButton.setBounds(190, 240, 130, 40);
-        loginButton.setBackground(new java.awt.Color(17, 59, 75));
-        loginButton.setForeground(new java.awt.Color(228,202,151));
+        loginButton.setBackground(new Color(17, 59, 75));
+        loginButton.setForeground(new Color(228, 202, 151));
         loginButton.setFocusPainted(false);
-        loginButton.setFocusable(true);
-        loginButton.setBorder(null);
+        loginButton.setBorderPainted(false);        
+        loginButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         loginButton.setFont(new java.awt.Font("Arial Narrow", 1, 22));
         add(loginButton);
 
-        loginButton.addActionListener((ActionListener) new ActionListener() {
+        loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String email = emailField.getText().toLowerCase();
@@ -131,27 +168,7 @@ public class LoginFrame extends JFrame {
         });
     }
 
-    private void emailFieldActionPerformed(MouseEvent evt) {
-        if (emailField.getText().equals("Ingrese aqui su correo")){
-            emailField.setFocusable(true);
-            emailField.setText("");
-            emailField.setForeground(new java.awt.Color(0,0,0));
-        }
-        if (String.valueOf(passwordField.getPassword()).isEmpty()){
-            passwordField.setText("********");
-            passwordField.setForeground(new java.awt.Color(160,160,160));
-        }
-    }
-
-    private void passwordFieldActionPerformed(MouseEvent evt) {
-        if (String.valueOf(passwordField.getPassword()).equals("********")){
-            passwordField.setFocusable(true);
-            passwordField.setText("");
-            passwordField.setForeground(new java.awt.Color(0,0,0));
-        }
-        if (emailField.getText().isEmpty()){
-            emailField.setText("Ingrese aqui su correo");
-            emailField.setForeground(new java.awt.Color(160,160,160));
-        }
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new LoginFrame().setVisible(true));
     }
 }

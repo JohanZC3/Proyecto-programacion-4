@@ -1,7 +1,11 @@
-package classes;
+package repositorios;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
+import classes.Usuario;
+
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -10,11 +14,13 @@ import java.util.ArrayList;
 
 public class UsuarioRepositorio {
     private static ArrayList<Usuario> usuarios = new ArrayList<>();
-    private static final String ARCHIVO_JSON = "usuarios.json";
+    private static final String DATA_FOLDER = "GestionInventario/Data";
+    private static final String ARCHIVO_JSON = DATA_FOLDER + "/usuarios.json";
     private static final Gson gson = new Gson();
 
     // Cargar usuarios desde el archivo JSON al iniciar y agregar datos de prueba si está vacío
     static {
+        verificarOCrearCarpetaData();
         cargarUsuariosDesdeJSON();
         if (usuarios.isEmpty()) {
             // Agregar datos de prueba
@@ -87,6 +93,12 @@ public class UsuarioRepositorio {
     }
 
     private static void cargarUsuariosDesdeJSON() {
+        File archivo = new File(ARCHIVO_JSON);
+        if (!archivo.exists()) {
+            usuarios = new ArrayList<>();
+            return;
+        }
+
         try (FileReader reader = new FileReader(ARCHIVO_JSON)) {
             Type tipoListaUsuarios = new TypeToken<ArrayList<Usuario>>(){}.getType();
             usuarios = gson.fromJson(reader, tipoListaUsuarios);
@@ -96,6 +108,15 @@ public class UsuarioRepositorio {
         } catch (IOException e) {
             System.out.println("Error al cargar usuarios desde JSON: " + e.getMessage());
             usuarios = new ArrayList<>();
+        }
+    }
+
+    // Método para verificar y crear la carpeta "Data" si no existe
+    private static void verificarOCrearCarpetaData() {
+        File carpetaData = new File(DATA_FOLDER);
+        if (!carpetaData.exists()) {
+            carpetaData.mkdir();
+            System.out.println("Carpeta 'Data' creada.");
         }
     }
 }

@@ -1,8 +1,10 @@
-package classes;
+package repositorios;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+
+import classes.Proveedor;
 
 import java.io.File;
 import java.io.FileReader;
@@ -13,10 +15,12 @@ import java.util.ArrayList;
 
 public class ProveedorRepositorio {
     private static ArrayList<Proveedor> proveedores = new ArrayList<>();
-    private static final String ARCHIVO_JSON = "proveedores.json";
+    private static final String DATA_FOLDER = "GestionInventario/Data";
+    private static final String ARCHIVO_JSON = DATA_FOLDER + "/proveedores.json";
     private static final Gson gson = new GsonBuilder().create();
 
     static {
+        verificarOCrearCarpetaData();
         cargarProveedoresDesdeJSON();
         if (proveedores.isEmpty()) {
             // Agregar datos de prueba si es necesario
@@ -45,6 +49,15 @@ public class ProveedorRepositorio {
     public static Proveedor obtenerProveedorPorId(int id) {
         for (Proveedor proveedor : proveedores) {
             if (proveedor.getId() == id) {
+                return proveedor;
+            }
+        }
+        return null;
+    }
+
+    public static Proveedor obtenerProveedorPorNombre(String nombre) {
+        for (Proveedor proveedor : proveedores) {
+            if (proveedor.getNombre().equalsIgnoreCase(nombre)) {
                 return proveedor;
             }
         }
@@ -84,6 +97,15 @@ public class ProveedorRepositorio {
         } catch (IOException e) {
             System.out.println("Error al cargar proveedores desde JSON: " + e.getMessage());
             proveedores = new ArrayList<>();
+        }
+    }
+
+    // Método para verificar y crear la carpeta "Data" si no existe
+    private static void verificarOCrearCarpetaData() {
+        File carpetaData = new File(DATA_FOLDER);
+        if (!carpetaData.exists()) {
+            carpetaData.mkdir();
+            System.out.println("Carpeta 'Data' creada.");
         }
     }
 }
