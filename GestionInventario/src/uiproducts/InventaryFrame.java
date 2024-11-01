@@ -6,9 +6,10 @@ import classes.*;
 import repositorios.HistorialRepository;
 import repositorios.ProductoRepositorio;
 import servicios.HistorialService;
+import uihistorial.HistorialFrame;
 
 import java.awt.*;
-import java.awt.event.*;
+import java.time.LocalDate;
 import java.util.List;
 
 public class InventaryFrame extends JFrame {
@@ -29,7 +30,7 @@ public class InventaryFrame extends JFrame {
         topPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
 
         searchField = new JTextField(20);
-        searchField.setFont(new Font("Arial", Font.PLAIN, 18));
+        searchField.setFont(new Font("Arial Narrow", Font.PLAIN, 18));
 
         JButton searchButton = new JButton("Buscar");
         searchButton.setBackground(new Color(17, 59, 75));
@@ -49,10 +50,17 @@ public class InventaryFrame extends JFrame {
         addButton.setFocusPainted(false);
         addButton.setFont(new Font("Arial Narrow", Font.BOLD, 22));
 
+        JButton historialButton = new JButton("Historial");
+        historialButton.setBackground(new Color(17, 59, 75));
+        historialButton.setForeground(new Color(228, 202, 151));
+        historialButton.setFocusPainted(false);
+        historialButton.setFont(new Font("Arial Narrow", Font.BOLD, 22));
+
         topPanel.add(searchField);
         topPanel.add(searchButton);
         topPanel.add(homeButton);
         topPanel.add(addButton);
+        topPanel.add(historialButton);
         add(topPanel, BorderLayout.NORTH);
 
         // Configurar la tabla
@@ -102,6 +110,11 @@ public class InventaryFrame extends JFrame {
 
         // Listener de búsqueda
         searchButton.addActionListener(e -> buscarProducto());
+
+        historialButton.addActionListener(e -> {
+            HistorialFrame historialFrame = new HistorialFrame();
+            historialFrame.setVisible(true);
+        });
 
         setVisible(true);
     }
