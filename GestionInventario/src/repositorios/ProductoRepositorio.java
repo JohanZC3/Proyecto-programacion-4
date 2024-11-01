@@ -42,6 +42,30 @@ public class ProductoRepositorio {
         return new ArrayList<>(productos);
     }
 
+    public static Producto obtenerProductoPorId(int id) {
+        for (Producto producto : productos) {
+            if (producto.getId() == id) {
+                return producto;
+            }
+        }
+        return null;
+    }
+
+    public static void modificarProveedor(int id, Producto productoModificado) {
+    for (Producto producto : productos) {
+        if (producto.getId() == id) {
+            producto.setNombre(productoModificado.getNombre());
+            producto.setCategoria(productoModificado.getCategoria());
+            producto.setCantidad(productoModificado.getCantidad());
+            producto.setPrecioUnitario(productoModificado.getPrecioUnitario());
+            producto.setFechaExpiracion(productoModificado.getFechaExpiracion());
+            producto.setProveedorId(productoModificado.getProveedorId());
+            guardarProductosEnJSON();
+            break;
+        }
+    }
+    }
+
     private static void guardarProductosEnJSON() {
         try (FileWriter writer = new FileWriter(ARCHIVO_JSON)) {
             gson.toJson(productos, writer);
@@ -67,6 +91,11 @@ public class ProductoRepositorio {
             System.out.println("Error al cargar productos desde JSON: " + e.getMessage());
             productos = new ArrayList<>();
         }
+    }
+
+    public static void eliminarProducto(int id) {
+        productos.removeIf(producto -> producto.getId() == id);
+        guardarProductosEnJSON();
     }
 
     // Método para verificar y crear la carpeta "Data" si no existe

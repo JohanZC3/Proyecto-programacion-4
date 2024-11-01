@@ -10,6 +10,7 @@ import classes.*;
 import repositorios.ProveedorRepositorio;
 
 public class ProvidersFrame extends JFrame {
+    @SuppressWarnings("unused")
     public void mostrarProveedores() {
         setTitle("Proveedores Actuales");
         setSize(1000, 400);
@@ -133,6 +134,7 @@ public class ProvidersFrame extends JFrame {
         private final JButton editButton;
         private final JButton deleteButton;
 
+        @SuppressWarnings("unused")
         public ButtonEditor(JCheckBox checkBox, DefaultTableModel tableModel, JTable table) {
             super(checkBox);
             panel = new JPanel(new FlowLayout(FlowLayout.CENTER));

@@ -9,6 +9,7 @@ import java.awt.*;
 
 public class InventaryFrame extends JFrame {
 
+    @SuppressWarnings("unused")
     public void ShowUpInventaryFrame() {
         setTitle("Inventario Actual");
         setSize(1000, 400);
@@ -136,6 +137,7 @@ public class InventaryFrame extends JFrame {
         private final JButton editButton;
         private final JButton deleteButton;
 
+        @SuppressWarnings("unused")
         public ButtonEditor(JCheckBox checkBox, DefaultTableModel tableModel, JTable table) {
             super(checkBox);
             panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -156,7 +158,10 @@ public class InventaryFrame extends JFrame {
             editButton.addActionListener(e -> {
                 int row = table.getSelectedRow();
                 if (row >= 0) {
-                    JOptionPane.showMessageDialog(null, "Modificar producto en la fila: " + row);
+                    int id = (int) tableModel.getValueAt(row, 0);
+                    ProductUpdateFrame editProductFrame = new ProductUpdateFrame(id);
+                    editProductFrame.setVisible(true);
+                    dispose();
                 }
             });
 
@@ -166,7 +171,10 @@ public class InventaryFrame extends JFrame {
                     int confirm = JOptionPane.showConfirmDialog(null,
                             "¿Estás seguro de que deseas eliminar este producto?", "Confirmar eliminación",
                             JOptionPane.YES_NO_OPTION);
-                    if (confirm == JOptionPane.YES_OPTION) {
+                    if (confirm == JOptionPane.YES_OPTION) {                        
+                        int id = (int) tableModel.getValueAt(row, 0);
+                        System.out.println(id);
+                        ProductoRepositorio.eliminarProducto(id);
                         tableModel.removeRow(row);
                     }
                 }

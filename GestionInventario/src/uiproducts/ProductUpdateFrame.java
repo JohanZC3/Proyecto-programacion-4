@@ -4,8 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.time.LocalDate;
@@ -16,7 +14,7 @@ import repositorios.ProveedorRepositorio;
 import servicios.ProductoServicio;
 import ui.*;
 
-public class NewProductFrame extends JFrame {
+public class ProductUpdateFrame extends JFrame {
     private JTextField idField;
     private JTextField productNameField;
     private JLabel productCategoryLabel;
@@ -36,7 +34,7 @@ public class NewProductFrame extends JFrame {
     private JLabel priceLabel;
     private JSeparator jSeparator5;
     private JLabel dateLabel;
-    private JButton addProductButton;
+    private JButton updateProductButton;
     private JTextField dateDayField;
     private JTextField datemonthField;
     private JTextField dateYearField;
@@ -46,9 +44,9 @@ public class NewProductFrame extends JFrame {
     private JSeparator jSeparator6;
 
 
-    public NewProductFrame() {
+    public ProductUpdateFrame(int productId) {
 
-        setTitle("Añadir Producto");
+        setTitle("Modificar Producto");
         setSize(1000, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBackground(new Color(255, 255, 255));
@@ -61,13 +59,13 @@ public class NewProductFrame extends JFrame {
         verticalGoldPanel.setBounds(0, 0, 80, 400);
         add(verticalGoldPanel);
 
-        Welcome = new JLabel("Nuevo Producto");
+        Welcome = new JLabel("Modificar Producto");
         Welcome.setFont(new java.awt.Font("Franklin Gothic Demi", 1, 36));
         Welcome.setForeground(new java.awt.Color(17, 59, 75));
         Welcome.setBounds(105, 10, 400, 40);
         add(Welcome);
 
-        texto = new JLabel("Por favor ingresa la informacion del nuevo producto");
+        texto = new JLabel("Actualiza la informacion del producto");
         texto.setFont(new java.awt.Font("Segoe UI", 0, 16));
         texto.setBounds(105, 40, 800, 40);
         add(texto);
@@ -83,50 +81,8 @@ public class NewProductFrame extends JFrame {
         idField.setForeground(new Color(160, 160, 160));
         idField.setBackground(new Color(238, 238, 238));
         idField.setFont(new java.awt.Font("Segoe UI", 0, 14));
-
-        // Agregar KeyListener para solo permitir números
-        idField.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-                char c = e.getKeyChar();
-                // Permitir solo dígitos y borrar el texto inicial si se ingresa un número
-                if (!Character.isDigit(c) || idField.getText().equals("Ingrese aqui el Id del producto")) {
-                    if (Character.isDigit(c)) {
-                        idField.setText("");  // Borrar el texto inicial
-                    } else {
-                        e.consume();  // Evitar caracteres no numéricos
-                    }
-                }
-            }
-        });
-
+        idField.setEnabled(false); // No se puede editar el ID
         add(idField);
-
-        idField.addFocusListener(new FocusAdapter() {
-            public void focusGained(FocusEvent evt) {
-                if (idField.getText().equals("Ingrese aqui el Id del producto")) {
-                    idField.setText("");
-                    idField.setForeground(Color.BLACK);
-                }
-            }
-
-            public void focusLost(FocusEvent evt) {
-                if (idField.getText().isEmpty()) {
-                    idField.setText("Ingrese aqui el Id del producto");
-                    idField.setForeground(new Color(160, 160, 160));
-                }
-            }
-        });
-
-        // Mover foco a productNameField al presionar Enter
-        idField.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    productNameField.requestFocusInWindow();
-                }
-            }
-        });
 
         jSeparator1 = new JSeparator();
         jSeparator1.setPreferredSize(new java.awt.Dimension(600, 10));
@@ -142,28 +98,12 @@ public class NewProductFrame extends JFrame {
         productNameField = new JTextField("Ingrese aqui el nombre del producto");
         productNameField.setBounds(555, 115, 400, 30);
         productNameField.setBorder(null);
-        productNameField.setForeground(new Color(160, 160, 160));
+        productNameField.setForeground(Color.BLACK);
         productNameField.setBackground(new Color(238, 238, 238));
         productNameField.setFont(new java.awt.Font("Segoe UI", 0, 14));
         add(productNameField);
 
-        productNameField.addFocusListener(new FocusAdapter() {
-            public void focusGained(FocusEvent evt) {
-                if (String.valueOf(productNameField.getText()).equals("Ingrese aqui el nombre del producto")) {
-                    productNameField.setText("");
-                    productNameField.setForeground(Color.BLACK);
-                }
-            }
-
-            public void focusLost(FocusEvent evt) {
-                if (String.valueOf(productNameField.getText()).isEmpty()) {
-                    productNameField.setText("Ingrese aqui el nombre del producto");
-                    productNameField.setForeground(new Color(160, 160, 160));
-                }
-            }
-        });
-
-        // Ejecutar acción de addProductButton al presionar Enter
+        // Ejecutar acción de updateProductButton al presionar Enter
         productNameField.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -187,28 +127,12 @@ public class NewProductFrame extends JFrame {
         productCategoryField = new JTextField("Ingrese aqui la categoria del producto");
         productCategoryField.setBounds(105, 190, 400, 30);
         productCategoryField.setBorder(null);
-        productCategoryField.setForeground(new Color(160, 160, 160));
+        productCategoryField.setForeground(Color.BLACK);
         productCategoryField.setBackground(new Color(238, 238, 238));
         productCategoryField.setFont(new java.awt.Font("Segoe UI", 0, 14));
         add(productCategoryField);
 
-        productCategoryField.addFocusListener(new FocusAdapter() {
-            public void focusGained(FocusEvent evt) {
-                if (String.valueOf(productCategoryField.getText()).equals("Ingrese aqui la categoria del producto")) {
-                    productCategoryField.setText("");
-                    productCategoryField.setForeground(Color.BLACK);
-                }
-            }
-
-            public void focusLost(FocusEvent evt) {
-                if (String.valueOf(productCategoryField.getText()).isEmpty()) {
-                    productCategoryField.setText("Ingrese aqui la categoria del producto");
-                    productCategoryField.setForeground(new Color(160, 160, 160));
-                }
-            }
-        });
-
-        // Ejecutar acción de addProductButton al presionar Enter
+        // Ejecutar acción de updateProductButton al presionar Enter
         productCategoryField.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -232,46 +156,12 @@ public class NewProductFrame extends JFrame {
         amoundField = new JTextField("Ingrese aqui la cantidad del producto");
         amoundField.setBounds(555, 190, 400, 30);
         amoundField.setBorder(null);
-        amoundField.setForeground(new Color(160, 160, 160));
+        amoundField.setForeground(Color.BLACK);
         amoundField.setBackground(new Color(238, 238, 238));
-        amoundField.setFont(new java.awt.Font("Segoe UI", 0, 14));
-        
-        // Agregar KeyListener para solo permitir números
-        amoundField.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-                char c = e.getKeyChar();
-                // Permitir solo dígitos y borrar el texto inicial si se ingresa un número
-                if (!Character.isDigit(c) || amoundField.getText().equals("Ingrese aqui la cantidad del producto")) {
-                    if (Character.isDigit(c)) {
-                        amoundField.setText("");  // Borrar el texto inicial
-                    } else {
-                        e.consume();  // Evitar caracteres no numéricos
-                    }
-                }
-            }
-        });
-        
+        amoundField.setFont(new java.awt.Font("Segoe UI", 0, 14));        
         add(amoundField);
-        
 
-        amoundField.addFocusListener(new FocusAdapter() {
-            public void focusGained(FocusEvent evt) {
-                if (String.valueOf(amoundField.getText()).equals("Ingrese aqui la cantidad del producto")) {
-                    amoundField.setText("");
-                    amoundField.setForeground(Color.BLACK);
-                }
-            }
-
-            public void focusLost(FocusEvent evt) {
-                if (String.valueOf(amoundField.getText()).isEmpty()) {
-                    amoundField.setText("Ingrese aqui la cantidad del producto");
-                    amoundField.setForeground(new Color(160, 160, 160));
-                }
-            }
-        });
-
-        // Ejecutar acción de addProductButton al presionar Enter
+        // Ejecutar acción de updateProductButton al presionar Enter
         amoundField.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -295,59 +185,12 @@ public class NewProductFrame extends JFrame {
         priceField = new JTextField("Ingrese aqui el precio del producto");
         priceField.setBounds(105, 265, 400, 30);
         priceField.setBorder(null);
-        priceField.setForeground(new Color(160, 160, 160));
+        priceField.setForeground(Color.BLACK);
         priceField.setBackground(new Color(238, 238, 238));
         priceField.setFont(new java.awt.Font("Segoe UI", 0, 14));
-        
-        // Agregar KeyListener para solo permitir números
-        priceField.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-                char c = e.getKeyChar();
-        
-                // Obtener el texto actual del campo
-                String currentText = priceField.getText();
-        
-                // Permitir solo dígitos, un solo punto decimal, y borrar el texto inicial si se ingresa un número
-                if ((!Character.isDigit(c) && c != '.') || currentText.equals("Ingrese aqui el precio del producto")) {
-                    if (Character.isDigit(c) || c == '.') {
-                        // Borrar el texto inicial si es la primera entrada válida
-                        if (currentText.equals("Ingrese aqui el precio del producto")) {
-                            priceField.setText("");
-                        }
-                    } else {
-                        e.consume();  // Evitar caracteres no numéricos
-                    }
-                }
-        
-                // Permitir un solo punto decimal
-                if (c == '.' && currentText.contains(".")) {
-                    e.consume();  // Evitar un segundo punto decimal
-                }
-            }
-        });
-        
-        
         add(priceField);
-        
 
-        priceField.addFocusListener(new FocusAdapter() {
-            public void focusGained(FocusEvent evt) {
-                if (String.valueOf(priceField.getText()).equals("Ingrese aqui el precio del producto")) {
-                    priceField.setText("");
-                    priceField.setForeground(Color.BLACK);
-                }
-            }
-
-            public void focusLost(FocusEvent evt) {
-                if (String.valueOf(priceField.getText()).isEmpty()) {
-                    priceField.setText("Ingrese aqui el precio del producto");
-                    priceField.setForeground(new Color(160, 160, 160));
-                }
-            }
-        });
-
-        // Ejecutar acción de addProductButton al presionar Enter
+        // Ejecutar acción de updateProductButton al presionar Enter
         priceField.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -370,8 +213,20 @@ public class NewProductFrame extends JFrame {
 
         dateYearField = new JTextField("yyyy");
         dateYearField.setBounds(635, 265, 40, 30);
-        addFocusAndKeyListener(dateYearField, "yyyy");
+        dateYearField.setBorder(null);
+        dateYearField.setForeground(Color.BLACK);
+        dateYearField.setBackground(new Color(238, 238, 238));
+        dateYearField.setFont(new java.awt.Font("Segoe UI", Font.PLAIN, 14));
         add(dateYearField);
+
+        dateYearField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    providerField.requestFocusInWindow();
+                }
+            }
+        });
 
         jSeparator6 = new JSeparator();
         jSeparator6.setPreferredSize(new Dimension(600, 10));
@@ -381,51 +236,34 @@ public class NewProductFrame extends JFrame {
 
         datemonthField = new JTextField("mm");
         datemonthField.setBounds(595, 265, 25, 30);
-        addFocusAndKeyListener(datemonthField, "mm");
+        datemonthField.setBorder(null);
+        datemonthField.setForeground(Color.BLACK);
+        datemonthField.setBackground(new Color(238, 238, 238));
+        datemonthField.setFont(new java.awt.Font("Segoe UI", Font.PLAIN, 14));
         add(datemonthField);
 
-        dateDayField = new JTextField("dd");
-        dateDayField.setBounds(555, 265, 25, 30);
-        addFocusAndKeyListener(dateDayField, "dd");
-        add(dateDayField);
-    }
-
-    private void addFocusAndKeyListener(JTextField field, String placeholderText) {
-        field.setBorder(null);
-        field.setForeground(new Color(160, 160, 160));
-        field.setBackground(new Color(238, 238, 238));
-        field.setFont(new java.awt.Font("Segoe UI", Font.PLAIN, 14));
-
-        field.addFocusListener(new FocusAdapter() {
+        datemonthField.addKeyListener(new KeyAdapter() {
             @Override
-            public void focusGained(FocusEvent evt) {
-                if (field.getText().equals(placeholderText)) {
-                    field.setText("");
-                    field.setForeground(Color.BLACK);
-                }
-            }
-
-            @Override
-            public void focusLost(FocusEvent evt) {
-                if (field.getText().isEmpty()) {
-                    field.setText(placeholderText);
-                    field.setForeground(new Color(160, 160, 160));
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    dateYearField.requestFocusInWindow();
                 }
             }
         });
 
-        field.addKeyListener(new KeyAdapter() {
+        dateDayField = new JTextField("dd");
+        dateDayField.setBounds(555, 265, 25, 30);
+        dateDayField.setBorder(null);
+        dateDayField.setForeground(Color.BLACK);
+        dateDayField.setBackground(new Color(238, 238, 238));
+        dateDayField.setFont(new java.awt.Font("Segoe UI", Font.PLAIN, 14));
+        add(dateDayField);
+
+        dateDayField.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    // Mueve el foco al siguiente campo de fecha
-                    if (field == dateDayField) {
-                        datemonthField.requestFocusInWindow();
-                    } else if (field == datemonthField) {
-                        dateYearField.requestFocusInWindow();
-                    } else {
-                        providerField.requestFocusInWindow();
-                    }
+                    datemonthField.requestFocusInWindow();
                 }
             }
         });
@@ -437,34 +275,18 @@ public class NewProductFrame extends JFrame {
 
         providerField = new JTextField("Ingresa el Proveedor");
         providerField.setBounds(765, 265, 190, 30);
-        providerField.setForeground(new Color(160, 160, 160));
+        providerField.setForeground(Color.BLACK);
         providerField.setBackground(new Color(238, 238, 238));
         providerField.setBorder(null);
         providerField.setFont(new java.awt.Font("Segoe UI", Font.PLAIN, 14));
         add(providerField);    
-        
-        providerField.addFocusListener(new FocusAdapter() {
-            public void focusGained(FocusEvent evt) {
-                if (String.valueOf(providerField.getText()).equals("Ingresa el Proveedor")) {
-                    providerField.setText("");
-                    providerField.setForeground(Color.BLACK);
-                }
-            }
-
-            public void focusLost(FocusEvent evt) {
-                if (String.valueOf(providerField.getText()).isEmpty()) {
-                    providerField.setText("Ingresa el Proveedor");
-                    providerField.setForeground(new Color(160, 160, 160));
-                }
-            }
-        });
 
         // Foco y enter en JComboBox
         providerField.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    addProductButton.doClick();
+                    updateProductButton.doClick();
                 }
             }
         });
@@ -477,17 +299,19 @@ public class NewProductFrame extends JFrame {
 
 
         
-        addProductButton = new JButton("Agregar Producto");
-        addProductButton.setBounds(105, 310, 200, 40);
-        addProductButton.setBackground(new Color(17, 59, 75));
-        addProductButton.setForeground(new Color(228, 202, 151));
-        addProductButton.setFocusPainted(false);
-        addProductButton.setBorderPainted(false);        
-        addProductButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        addProductButton.setFont(new java.awt.Font("Arial Narrow", 1, 22));
-        add(addProductButton);
+        updateProductButton = new JButton("Guardar Cambios");
+        updateProductButton.setBounds(105, 310, 200, 40);
+        updateProductButton.setBackground(new Color(17, 59, 75));
+        updateProductButton.setForeground(new Color(228, 202, 151));
+        updateProductButton.setFocusPainted(false);
+        updateProductButton.setBorderPainted(false);        
+        updateProductButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        updateProductButton.setFont(new java.awt.Font("Arial Narrow", 1, 22));
+        add(updateProductButton);
 
-        addProductButton.addActionListener(new ActionListener() {
+        loadProductData(productId);
+
+        updateProductButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int idint =  Integer.parseInt(idField.getText());
@@ -509,8 +333,8 @@ public class NewProductFrame extends JFrame {
                         if (productoServicio.validacionInformacion(idint, productName, productCategory, amoundint, price, idProveedor)) {
                             System.out.println(idint + " " + productName + " " + productCategory + " " + amoundint + " " + price + " " + expirationDate + " " + idProveedor);
                             Producto producto = new Producto(idint, productName, productCategory, amoundint, price, expirationDate, idProveedor);
-                            ProductoRepositorio.crearProducto(producto);
-                            JOptionPane.showMessageDialog(null, "Producto agregado exitosamente", "Producto Agregado", JOptionPane.INFORMATION_MESSAGE);
+                            ProductoRepositorio.modificarProveedor(productId, producto);
+                            JOptionPane.showMessageDialog(null, "Producto Modificado exitosamente", "Producto Modificado", JOptionPane.INFORMATION_MESSAGE);
                             dispose();
                         } else {
                             JOptionPane.showMessageDialog(null, "Por favor ingrese todos los campos", "Error", JOptionPane.ERROR_MESSAGE);
@@ -533,6 +357,24 @@ public class NewProductFrame extends JFrame {
             return proveedor.getId();
         } else {
             return -1;
+        }
+    }
+
+    private void loadProductData(int productId) {
+        Producto producto = ProductoRepositorio.obtenerProductoPorId(productId);
+        if (producto != null) {
+            idField.setText(String.valueOf(producto.getId()));
+            productNameField.setText(producto.getNombre());
+            productCategoryField.setText(producto.getCategoria());
+            amoundField.setText(String.valueOf(producto.getCantidad()));
+            priceField.setText(String.valueOf(producto.getPrecioUnitario()));
+            dateDayField.setText(String.valueOf(producto.getFechaExpiracion().getDayOfMonth()));
+            datemonthField.setText(String.valueOf(producto.getFechaExpiracion().getMonthValue()));
+            dateYearField.setText(String.valueOf(producto.getFechaExpiracion().getYear()));
+            providerField.setText(String.valueOf(ProveedorRepositorio.obtenerProveedorPorId(producto.getProveedorId()).getNombre()));
+        } else {
+            JOptionPane.showMessageDialog(this, "Producto no encontrado", "Error", JOptionPane.ERROR_MESSAGE);
+            dispose();
         }
     }
 

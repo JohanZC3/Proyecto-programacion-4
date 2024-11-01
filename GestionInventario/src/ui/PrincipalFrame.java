@@ -13,6 +13,7 @@ import java.awt.event.*;
 public class PrincipalFrame extends JFrame {
     private JLabel welcomeLabel;
 
+    @SuppressWarnings("unused")
     public PrincipalFrame(String email) {
         setTitle("Pantalla Principal");
         setSize(400, 330);

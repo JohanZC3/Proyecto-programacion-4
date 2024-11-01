@@ -63,7 +63,7 @@ public class ProvidersUpdateFrame extends JFrame {
         idField = new JTextField(String.valueOf(providerId));
         idField.setBounds(105, 115, 400, 30);
         idField.setBorder(null);
-        idField.setForeground(Color.BLACK);
+        idField.setForeground(new Color(160, 160, 160));
         idField.setBackground(new Color(238, 238, 238));
         idField.setFont(new java.awt.Font("Segoe UI", 0, 14));
         idField.setEnabled(false);  // El campo de ID no debe ser editable para modificación
