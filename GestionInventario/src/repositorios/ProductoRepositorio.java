@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ProductoRepositorio {
     private static ArrayList<Producto> productos = new ArrayList<>();
@@ -106,4 +107,16 @@ public class ProductoRepositorio {
             System.out.println("Carpeta 'Data' creada.");
         }
     }
+
+    public static List<Producto> obtenerProductosFiltrados(String criterio) {
+    List<Producto> productosFiltrados = new ArrayList<>();
+    for (Producto producto : productos) {
+        if (producto.getNombre().toLowerCase().contains(criterio) || 
+            producto.getCategoria().toLowerCase().contains(criterio)) {
+            productosFiltrados.add(producto);
+        }
+    }
+    return productosFiltrados;
+}
+
 }

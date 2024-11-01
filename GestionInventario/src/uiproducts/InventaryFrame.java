@@ -8,9 +8,13 @@ import repositorios.ProductoRepositorio;
 import servicios.HistorialService;
 
 import java.awt.*;
-import java.time.LocalDate;
+import java.awt.event.*;
+import java.util.List;
 
 public class InventaryFrame extends JFrame {
+
+    private JTextField searchField;
+    private DefaultTableModel tableModel;
 
     @SuppressWarnings("unused")
     public void ShowUpInventaryFrame() {
@@ -20,9 +24,18 @@ public class InventaryFrame extends JFrame {
         setLayout(new BorderLayout());
         setResizable(false);
 
-        // Panel superior con botones
+        // Panel superior con botones y campo de búsqueda
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+
+        searchField = new JTextField(20);
+        searchField.setFont(new Font("Arial", Font.PLAIN, 18));
+
+        JButton searchButton = new JButton("Buscar");
+        searchButton.setBackground(new Color(17, 59, 75));
+        searchButton.setForeground(new Color(228, 202, 151));
+        searchButton.setFocusPainted(false);
+        searchButton.setFont(new Font("Arial Narrow", Font.BOLD, 22));
 
         JButton homeButton = new JButton("Volver al Inicio");
         homeButton.setBackground(new Color(17, 59, 75));
@@ -36,38 +49,21 @@ public class InventaryFrame extends JFrame {
         addButton.setFocusPainted(false);
         addButton.setFont(new Font("Arial Narrow", Font.BOLD, 22));
 
+        topPanel.add(searchField);
+        topPanel.add(searchButton);
         topPanel.add(homeButton);
         topPanel.add(addButton);
         add(topPanel, BorderLayout.NORTH);
 
         // Configurar la tabla
-        String[] columnNames = { "ID", "Nombre", "Categoría", "Cantidad", "Precio Unitario", "Fecha de Expiración",
-                "Acciones" };
-        DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0) {
+        String[] columnNames = { "ID", "Nombre", "Categoría", "Cantidad", "Precio Unitario", "Fecha de Expiración", "Acciones" };
+        tableModel = new DefaultTableModel(columnNames, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return column == columnNames.length - 1;
             }
         };
-
-        try {
-            for (Producto producto : ProductoRepositorio.obtenerProductos()) {
-                Object[] rowData = {
-                        producto.getId(),
-                        producto.getNombre(),
-                        producto.getCategoria(),
-                        producto.getCantidad(),
-                        producto.getPrecioUnitario(),
-                        producto.getFechaExpiracion(),
-                        "Acciones"
-                };
-                tableModel.addRow(rowData);
-            }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Error al cargar el inventario: " + e.getMessage(), "Error",
-                    JOptionPane.ERROR_MESSAGE);
-            return;
-        }
+        actualizarTabla(ProductoRepositorio.obtenerProductos()); // Carga inicial de productos
 
         JTable table = new JTable(tableModel);
         table.setRowHeight(70);
@@ -89,13 +85,13 @@ public class InventaryFrame extends JFrame {
 
         JScrollPane scrollPane = new JScrollPane(table);
 
-        // Panel para añadir el margen
         JPanel panelConMargen = new JPanel(new BorderLayout());
         panelConMargen.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         panelConMargen.add(scrollPane, BorderLayout.CENTER);
 
         add(panelConMargen, BorderLayout.CENTER);
 
+        // Listeners para botones
         homeButton.addActionListener(e -> dispose());
 
         addButton.addActionListener(e -> {
@@ -104,7 +100,32 @@ public class InventaryFrame extends JFrame {
             dispose();
         });
 
+        // Listener de búsqueda
+        searchButton.addActionListener(e -> buscarProducto());
+
         setVisible(true);
+    }
+
+    private void actualizarTabla(List<Producto> productos) {
+        tableModel.setRowCount(0); // Limpiar la tabla
+        for (Producto producto : productos) {
+            Object[] rowData = {
+                producto.getId(),
+                producto.getNombre(),
+                producto.getCategoria(),
+                producto.getCantidad(),
+                producto.getPrecioUnitario(),
+                producto.getFechaExpiracion(),
+                "Acciones"
+            };
+            tableModel.addRow(rowData);
+        }
+    }
+
+    private void buscarProducto() {
+        String query = searchField.getText().trim().toLowerCase();
+        List<Producto> productosFiltrados = ProductoRepositorio.obtenerProductosFiltrados(query);
+        actualizarTabla(productosFiltrados);
     }
 
     // Renderer para los botones en la tabla
@@ -174,9 +195,8 @@ public class InventaryFrame extends JFrame {
                     int confirm = JOptionPane.showConfirmDialog(null,
                             "¿Estás seguro de que deseas eliminar este producto?", "Confirmar eliminación",
                             JOptionPane.YES_NO_OPTION);
-                    if (confirm == JOptionPane.YES_OPTION) {                        
+                    if (confirm == JOptionPane.YES_OPTION) {
                         int id = (int) tableModel.getValueAt(row, 0);
-                        System.out.println(id);
                         ProductoRepositorio.eliminarProducto(id);
                         HistorialService historialServicio = new HistorialService();
                         int idHistorial = historialServicio.obtenerMaxIdHistorial();
