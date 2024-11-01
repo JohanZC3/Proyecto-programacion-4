@@ -3,9 +3,12 @@ package uiproducts;
 import javax.swing.*;
 import javax.swing.table.*;
 import classes.*;
+import repositorios.HistorialRepository;
 import repositorios.ProductoRepositorio;
+import servicios.HistorialService;
 
 import java.awt.*;
+import java.time.LocalDate;
 
 public class InventaryFrame extends JFrame {
 
@@ -159,8 +162,8 @@ public class InventaryFrame extends JFrame {
                 int row = table.getSelectedRow();
                 if (row >= 0) {
                     int id = (int) tableModel.getValueAt(row, 0);
-                    ProductUpdateFrame editProductFrame = new ProductUpdateFrame(id);
-                    editProductFrame.setVisible(true);
+                    ProductUpdateFrame productUpdateFrame = new ProductUpdateFrame(id);
+                    productUpdateFrame.setVisible(true);
                     dispose();
                 }
             });
@@ -175,6 +178,10 @@ public class InventaryFrame extends JFrame {
                         int id = (int) tableModel.getValueAt(row, 0);
                         System.out.println(id);
                         ProductoRepositorio.eliminarProducto(id);
+                        HistorialService historialServicio = new HistorialService();
+                        int idHistorial = historialServicio.obtenerMaxIdHistorial();
+                        Historial historial = new Historial(idHistorial, "Eliminacion", LocalDate.now(), id, "Eliminacion de "+tableModel.getValueAt(row, 1));
+                        HistorialRepository.crearHistorial(historial);
                         tableModel.removeRow(row);
                     }
                 }

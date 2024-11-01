@@ -13,6 +13,7 @@ import repositorios.ProductoRepositorio;
 import repositorios.ProveedorRepositorio;
 import servicios.ProductoServicio;
 import ui.*;
+import uihistorial.HistorialModal;
 
 public class ProductUpdateFrame extends JFrame {
     private JTextField idField;
@@ -334,7 +335,8 @@ public class ProductUpdateFrame extends JFrame {
                             System.out.println(idint + " " + productName + " " + productCategory + " " + amoundint + " " + price + " " + expirationDate + " " + idProveedor);
                             Producto producto = new Producto(idint, productName, productCategory, amoundint, price, expirationDate, idProveedor);
                             ProductoRepositorio.modificarProveedor(productId, producto);
-                            JOptionPane.showMessageDialog(null, "Producto Modificado exitosamente", "Producto Modificado", JOptionPane.INFORMATION_MESSAGE);
+                            HistorialModal historialModal = new HistorialModal(idint, "Modificacion");
+                            historialModal.setVisible(true);
                             dispose();
                         } else {
                             JOptionPane.showMessageDialog(null, "Por favor ingrese todos los campos", "Error", JOptionPane.ERROR_MESSAGE);

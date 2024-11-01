@@ -11,8 +11,10 @@ import java.awt.event.KeyEvent;
 import java.time.LocalDate;
 
 import classes.*;
+import repositorios.HistorialRepository;
 import repositorios.ProductoRepositorio;
 import repositorios.ProveedorRepositorio;
+import servicios.HistorialService;
 import servicios.ProductoServicio;
 import ui.*;
 
@@ -510,6 +512,10 @@ public class NewProductFrame extends JFrame {
                             System.out.println(idint + " " + productName + " " + productCategory + " " + amoundint + " " + price + " " + expirationDate + " " + idProveedor);
                             Producto producto = new Producto(idint, productName, productCategory, amoundint, price, expirationDate, idProveedor);
                             ProductoRepositorio.crearProducto(producto);
+                            HistorialService historialServicio = new HistorialService();
+                            int idHistorial = historialServicio.obtenerMaxIdHistorial();
+                            Historial historial = new Historial(idHistorial, "Creacion", LocalDate.now(), idint, "Creacion de "+productName);
+                            HistorialRepository.crearHistorial(historial);
                             JOptionPane.showMessageDialog(null, "Producto agregado exitosamente", "Producto Agregado", JOptionPane.INFORMATION_MESSAGE);
                             dispose();
                         } else {
