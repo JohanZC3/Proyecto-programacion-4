@@ -24,10 +24,6 @@ public class Producto {
 
     // Getters y Setters
 
-    public Producto(String idString, String productName, String productCategory, int amoundint, double price) {
-        //TODO Auto-generated constructor stub
-    }
-
     public int getId() {
         return id;
     }
