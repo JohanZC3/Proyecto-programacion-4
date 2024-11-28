@@ -1,4 +1,4 @@
-package repositorios;
+package classes.repositorios;
 
 import classes.LocalDateAdapter;
 import classes.Producto;
@@ -29,8 +29,8 @@ public class ProductoRepositorio {
         cargarProductosDesdeJSON();
         if (productos.isEmpty()) {
             // Agregar datos de prueba
-            crearProducto(new Producto(1, "Producto 1", "Categoria 1", 10, 100.0, LocalDate.of(2024, 12, 31),1));
-            crearProducto(new Producto(2, "Producto 2", "Categoria 2", 20, 150.0, LocalDate.of(2024, 12, 31),2));
+            crearProducto(new Producto(1, "Producto 1", 1, 10, 100.0, LocalDate.of(2024, 12, 31),1));
+            crearProducto(new Producto(2, "Producto 2", 2, 20, 150.0, LocalDate.of(2024, 12, 31),2));
         }
     }
 
@@ -52,7 +52,16 @@ public class ProductoRepositorio {
         return null;
     }
 
-    public static void modificarProveedor(int id, Producto productoModificado) {
+    public static int obtenerIdPorNombre(String nombre) {
+        for (Producto producto : productos) {
+            if (producto.getNombre().equalsIgnoreCase(nombre)) {
+                return producto.getId();
+            }
+        }
+        return -1; // Return -1 if no product is found with the given name
+    }
+
+    public static void modificarProducto(int id, Producto productoModificado) {
     for (Producto producto : productos) {
         if (producto.getId() == id) {
             producto.setNombre(productoModificado.getNombre());
@@ -110,9 +119,10 @@ public class ProductoRepositorio {
 
     public static List<Producto> obtenerProductosFiltrados(String criterio) {
     List<Producto> productosFiltrados = new ArrayList<>();
+    criterio = criterio.toLowerCase();
     for (Producto producto : productos) {
         if (producto.getNombre().toLowerCase().contains(criterio) || 
-            producto.getCategoria().toLowerCase().contains(criterio)) {
+            CategoryRepository.obtenerCategoryPorId(producto.getCategoria()).getNombre().toLowerCase().contains(criterio)) {
             productosFiltrados.add(producto);
         }
     }

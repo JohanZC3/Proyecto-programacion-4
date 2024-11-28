@@ -1,4 +1,4 @@
-package uiproviders;
+package ui.uiproviders;
 
 import javax.swing.*;
 
@@ -9,10 +9,14 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.time.LocalDate;
 
 import classes.*;
-import repositorios.ProveedorRepositorio;
-import servicios.ProveedorServicio;
+import classes.repositorios.HistorialRepository;
+import classes.repositorios.ProveedorRepositorio;
+import classes.repositorios.SerialIdRepository;
+import classes.servicios.HistorialService;
+import classes.servicios.ProveedorServicio;
 import ui.LoginFrame;
 
 public class NewProviderFrame extends JFrame {
@@ -71,6 +75,7 @@ public class NewProviderFrame extends JFrame {
         idField.setForeground(new Color(160, 160, 160));
         idField.setBackground(new Color(238, 238, 238));
         idField.setFont(new java.awt.Font("Segoe UI", 0, 14));
+        idField.setEnabled(false);
 
         // Agregar KeyListener para solo permitir números
         idField.addKeyListener(new KeyAdapter() {
@@ -284,6 +289,8 @@ public class NewProviderFrame extends JFrame {
         addproviderButton.setFont(new java.awt.Font("Arial Narrow", 1, 22));
         add(addproviderButton);
 
+        loadProductData();
+
         addproviderButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -294,6 +301,14 @@ public class NewProviderFrame extends JFrame {
 
                 if (ProveedorServicio.validarInformacion(idint, providerName, providerAdress, phoneString)) {
                     ProveedorRepositorio.crearProveedor(new Proveedor(idint, providerName, providerAdress, phoneString));
+                    int idHistorial = HistorialService.loadHistorialId();
+                    Historial historial = new Historial(idHistorial, "Creacion", LocalDate.now(), idint, "Creacion de " + providerName, "Proveedor");
+                    HistorialRepository.crearHistorial(historial);
+                    HistorialService.actualizarIds();
+
+                    SerialId serialId = SerialIdRepository.obtenerSerialIdPorId(1);
+                    serialId.setLastidProveedor(idint);
+                    SerialIdRepository.modificarSerialId(serialId);
                     JOptionPane.showMessageDialog(null, "Proveedor agregado exitosamente", "Proveedor Agregado", JOptionPane.INFORMATION_MESSAGE);
                     dispose();
                 } else {
@@ -301,6 +316,12 @@ public class NewProviderFrame extends JFrame {
                 }
             }
         });
+    }
+
+    private void loadProductData() {
+        SerialId serialId = SerialIdRepository.obtenerSerialIdPorId(1);
+        int lastId = serialId.getLastidProveedor();
+        idField.setText(String.valueOf(lastId + 1));        
     }
 
     public static void main(String[] args) {

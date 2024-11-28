@@ -3,9 +3,10 @@ package ui;
 import javax.swing.*;
 
 import classes.*;
-import repositorios.UsuarioRepositorio;
-import uiproducts.InventaryFrame;
-import uiproviders.ProvidersFrame;
+import classes.repositorios.UsuarioRepositorio;
+import ui.uihistorial.HistorialFrame;
+import ui.uiproducts.InventaryFrame;
+import ui.uiproviders.ProvidersFrame;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -16,7 +17,7 @@ public class PrincipalFrame extends JFrame {
     @SuppressWarnings("unused")
     public PrincipalFrame(String email) {
         setTitle("Pantalla Principal");
-        setSize(400, 330);
+        setSize(400, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
@@ -61,9 +62,19 @@ public class PrincipalFrame extends JFrame {
         proveedoresButton.setFocusable(false);  // Evitar enfoque inicial
         add(proveedoresButton);
 
+        // Botón para ver Historial de Acciones
+        JButton HistorialButton = new JButton("Mostrar Historial");
+        HistorialButton.setBounds(50, 220, 300, 50);
+        HistorialButton.setBackground(new Color(17, 59, 75));
+        HistorialButton.setForeground(new Color(228, 202, 151));
+        HistorialButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        HistorialButton.setFont(new java.awt.Font("Arial Narrow", 1, 22));
+        HistorialButton.setFocusable(false);  // Evitar enfoque inicial
+        add(HistorialButton);
+
         // Botón para cerrar sesión
         JButton logoutButton = new JButton("Cerrar sesión");
-        logoutButton.setBounds(50, 220, 300, 50);
+        logoutButton.setBounds(50, 290, 300, 50);
         logoutButton.setBackground(new Color(17, 59, 75));
         logoutButton.setForeground(new Color(228, 202, 151));
         logoutButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -74,6 +85,7 @@ public class PrincipalFrame extends JFrame {
         // Agregar acción para cada botón
         inventarioButton.addActionListener(e -> new InventaryFrame().ShowUpInventaryFrame());
         proveedoresButton.addActionListener(e -> new ProvidersFrame().mostrarProveedores());
+        HistorialButton.addActionListener(e -> new HistorialFrame().mostrarHistorialFrame());
         logoutButton.addActionListener(e -> {
             new LoginFrame().setVisible(true);
             dispose();

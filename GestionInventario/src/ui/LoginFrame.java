@@ -2,6 +2,8 @@ package ui;
 
 import javax.swing.*;
 
+import classes.servicios.UsuarioServicio;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,7 +11,6 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import servicios.UsuarioServicio;
 
 public class LoginFrame extends JFrame {
     private JTextField emailField;

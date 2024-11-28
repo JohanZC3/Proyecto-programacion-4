@@ -1,4 +1,4 @@
-package repositorios;
+package classes.repositorios;
 
 import java.io.File;
 import java.io.FileReader;
@@ -28,8 +28,8 @@ public class HistorialRepository {
         cargarHistorialesDesdeJSON();
         if (historiales.isEmpty()) {
             // Agregar datos de prueba
-            crearHistorial(new Historial(1, "Creacion", LocalDate.now(), 1, "Creación de producto 1"));
-            crearHistorial(new Historial(2, "Creacion", LocalDate.now(), 2, "Creacion de producto 2"));
+            crearHistorial(new Historial(1, "Creacion", LocalDate.now(), 1, "Creación de producto 1", "Productos"));
+            crearHistorial(new Historial(2, "Creacion", LocalDate.now(), 2, "Creacion de producto 2", "Productos"));
         }
     }
 
@@ -56,8 +56,9 @@ public class HistorialRepository {
             if (historial.getId() == id) {
                 historial.setAccion(historialModificado.getAccion());
                 historial.setFecha(historialModificado.getFecha());
-                historial.setIdProducto(historialModificado.getIdProducto());
+                historial.setIdAfectado(historialModificado.getIdAfectado());
                 historial.setRazon(historialModificado.getRazon());
+                historial.setTabla(historialModificado.getTabla());
                 guardarHistorialesEnJSON();
                 return;
             }

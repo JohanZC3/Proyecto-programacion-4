@@ -6,15 +6,17 @@ public class Historial {
     private int id;
     private String accion;
     private LocalDate fecha;
-    private int idProducto;
+    private int idAfectado;
+    private String tabla;
     private String razon;
 
-    public Historial(int id, String accion, LocalDate fecha, int idProducto, String razon) {
+    public Historial(int id, String accion, LocalDate fecha, int idAfectado, String razon, String tabla) {
         this.id = id;
         this.accion = accion;
         this.fecha = fecha;
-        this.idProducto = idProducto;
+        this.idAfectado = idAfectado;
         this.razon = razon;
+        this.tabla = tabla;
     }
 
     public int getId() {
@@ -41,12 +43,12 @@ public class Historial {
         this.fecha = fecha;
     }
 
-    public int getIdProducto() {
-        return idProducto;
+    public int getIdAfectado() {
+        return idAfectado;
     }
 
-    public void setIdProducto(int idProducto) {
-        this.idProducto = idProducto;
+    public void setIdAfectado(int idAfectado) {
+        this.idAfectado = idAfectado;
     }
 
     public String getRazon() {
@@ -55,6 +57,14 @@ public class Historial {
 
     public void setRazon(String razon) {
         this.razon = razon;
+    }
+
+    public String getTabla() {
+        return tabla;
+    }
+
+    public void setTabla(String tabla) {
+        this.tabla = tabla;
     }
     
 }

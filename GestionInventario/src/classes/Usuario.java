@@ -10,8 +10,9 @@ public class Usuario {
     private String telefono;
     private boolean estadoActivo;
     private String password;
+    private String tipoUsuario;
 
-    public Usuario(int id, String nombre, String apellido, String tipoDocumento, String numeroDocumento, String direccion, String telefono, boolean estadoActivo, String password) {
+    public Usuario(int id, String nombre, String apellido, String tipoDocumento, String numeroDocumento, String direccion, String telefono, boolean estadoActivo, String tipoUsuario, String password) {
         this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;
@@ -20,6 +21,7 @@ public class Usuario {
         this.direccion = direccion;
         this.telefono = telefono;
         this.estadoActivo = estadoActivo;
+        this.tipoUsuario = tipoUsuario;
         this.password = password;
     }
 
@@ -93,5 +95,13 @@ public class Usuario {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getTipoUsuario() {
+        return tipoUsuario;
+    }
+
+    public void setTipoUsuario(String tipoUsuario) {
+        this.tipoUsuario = tipoUsuario;
     }
 }

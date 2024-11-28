@@ -1,4 +1,4 @@
-package uihistorial;
+package ui.uihistorial;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -14,8 +14,8 @@ import java.time.LocalDate;
 import javax.swing.*;
 
 import classes.Historial;
-import repositorios.HistorialRepository;
-import servicios.HistorialService;
+import classes.repositorios.HistorialRepository;
+import classes.servicios.HistorialService;
 import ui.LoginFrame;
 
 public class HistorialModal extends JFrame{
@@ -26,7 +26,7 @@ public class HistorialModal extends JFrame{
     JButton button;
     JSeparator separator;
 
-    public HistorialModal(int idProduct, String accion) {
+    public HistorialModal(int idCambio, String accion, String tabla) {
         setTitle("Historial de Inventario");
         setSize(500, 180);
         setLocationRelativeTo(null);
@@ -108,13 +108,12 @@ public class HistorialModal extends JFrame{
                 String motivo = new String(textField.getText());
                 motivo = (!motivo.equals("Ingrese el motivo de la modificación")) ? motivo : "Sin motivo";
                 // Guardar en la base de datos
-                HistorialService historialServicio = new HistorialService();
-                int idHistorial = historialServicio.obtenerMaxIdHistorial();
-                System.out.println("ID Historial: " + idHistorial + ", Accion: " + accion + ", Fecha: " + LocalDate.now() + ", ID Producto: " + idProduct + ", Motivo: " + motivo);
-                Historial historial = new Historial(idHistorial, accion, LocalDate.now(), idProduct, motivo);
+                int idHistorial = HistorialService.loadHistorialId();
+                System.out.println("ID Historial: " + idHistorial + ", Accion: " + accion + ", Fecha: " + LocalDate.now() + ", ID Producto: " + idCambio + ", Motivo: " + motivo);
+                Historial historial = new Historial(idHistorial, accion, LocalDate.now(), idCambio, motivo, tabla);
                 HistorialRepository.crearHistorial(historial);
-                JOptionPane.showMessageDialog(null, "Motivo guardado correctamente", "Historial de Inventario", JOptionPane.INFORMATION_MESSAGE);
-                JOptionPane.showMessageDialog(null, "Producto Modificado exitosamente", "Producto Modificado", JOptionPane.INFORMATION_MESSAGE);
+                HistorialService.actualizarIds();
+                JOptionPane.showMessageDialog(null, "Modificado exitosamente", "Modificado", JOptionPane.INFORMATION_MESSAGE);
                 dispose();
             }
         });

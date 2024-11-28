@@ -1,9 +1,9 @@
-package servicios;
+package classes.servicios;
 
 import java.time.LocalDate;
 
 public class ProductoServicio {
-    public boolean validacionInformacion(int id, String productName, String productCategory, int amoundint,
+    public boolean validacionInformacion(int id, String productName, int productCategory, int amoundint,
             Double price, int idProveedor) {
         if (id <= 0) {
             return false;
@@ -11,7 +11,7 @@ public class ProductoServicio {
         if (productName == null || productName.isEmpty()) {
             return false;
         }
-        if (productCategory == null || productCategory.isEmpty()) {
+        if (productCategory <= 0) {
             return false;
         }
         if (amoundint <= 0) {

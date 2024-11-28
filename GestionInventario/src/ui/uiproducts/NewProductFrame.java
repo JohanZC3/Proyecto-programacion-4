@@ -1,4 +1,4 @@
-package uiproducts;
+package ui.uiproducts;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,18 +11,20 @@ import java.awt.event.KeyEvent;
 import java.time.LocalDate;
 
 import classes.*;
-import repositorios.HistorialRepository;
-import repositorios.ProductoRepositorio;
-import repositorios.ProveedorRepositorio;
-import servicios.HistorialService;
-import servicios.ProductoServicio;
+import classes.repositorios.CategoryRepository;
+import classes.repositorios.HistorialRepository;
+import classes.repositorios.ProductoRepositorio;
+import classes.repositorios.ProveedorRepositorio;
+import classes.repositorios.SerialIdRepository;
+import classes.servicios.HistorialService;
+import classes.servicios.ProductoServicio;
 import ui.*;
 
 public class NewProductFrame extends JFrame {
     private JTextField idField;
     private JTextField productNameField;
     private JLabel productCategoryLabel;
-    private JTextField productCategoryField;
+    private JComboBox<String> productCategoryComboBox;
     private JPanel verticalGoldPanel;
     private JLabel Welcome;
     private JLabel texto;
@@ -43,7 +45,7 @@ public class NewProductFrame extends JFrame {
     private JTextField datemonthField;
     private JTextField dateYearField;
     private JLabel providerLabel;
-    private JTextField providerField;
+    private JComboBox<String> providerComboBox;
     private JSeparator jSeparator7;
     private JSeparator jSeparator6;
 
@@ -85,6 +87,7 @@ public class NewProductFrame extends JFrame {
         idField.setForeground(new Color(160, 160, 160));
         idField.setBackground(new Color(238, 238, 238));
         idField.setFont(new java.awt.Font("Segoe UI", 0, 14));
+        idField.setEnabled(false);
 
         // Agregar KeyListener para solo permitir números
         idField.addKeyListener(new KeyAdapter() {
@@ -170,7 +173,7 @@ public class NewProductFrame extends JFrame {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    productCategoryField.requestFocusInWindow();
+                    productCategoryComboBox.requestFocusInWindow();
                 }
             }
         });
@@ -186,32 +189,22 @@ public class NewProductFrame extends JFrame {
         productCategoryLabel.setBounds(105, 160, 400, 30);
         add(productCategoryLabel);
 
-        productCategoryField = new JTextField("Ingrese aqui la categoria del producto");
-        productCategoryField.setBounds(105, 190, 400, 30);
-        productCategoryField.setBorder(null);
-        productCategoryField.setForeground(new Color(160, 160, 160));
-        productCategoryField.setBackground(new Color(238, 238, 238));
-        productCategoryField.setFont(new java.awt.Font("Segoe UI", 0, 14));
-        add(productCategoryField);
-
-        productCategoryField.addFocusListener(new FocusAdapter() {
-            public void focusGained(FocusEvent evt) {
-                if (String.valueOf(productCategoryField.getText()).equals("Ingrese aqui la categoria del producto")) {
-                    productCategoryField.setText("");
-                    productCategoryField.setForeground(Color.BLACK);
-                }
-            }
-
-            public void focusLost(FocusEvent evt) {
-                if (String.valueOf(productCategoryField.getText()).isEmpty()) {
-                    productCategoryField.setText("Ingrese aqui la categoria del producto");
-                    productCategoryField.setForeground(new Color(160, 160, 160));
-                }
-            }
-        });
+        productCategoryComboBox = new JComboBox<String>();
+        productCategoryComboBox.setBounds(105, 190, 400, 30);
+        productCategoryComboBox.setForeground(Color.BLACK);
+        productCategoryComboBox.setBackground(new Color(238, 238, 238));
+        productCategoryComboBox.setBorder(null);
+        productCategoryComboBox.setFont(new java.awt.Font("Segoe UI", Font.PLAIN, 14));
+        productCategoryComboBox.addItem("Seleccione una categoria");
+        for (Category category : CategoryRepository.obtenerCategories()) {
+            String item = category.getNombre();
+            productCategoryComboBox.addItem(item);
+            System.out.println(item);
+        }
+        add(productCategoryComboBox);
 
         // Ejecutar acción de addProductButton al presionar Enter
-        productCategoryField.addKeyListener(new KeyAdapter() {
+        productCategoryComboBox.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
@@ -372,8 +365,36 @@ public class NewProductFrame extends JFrame {
 
         dateYearField = new JTextField("yyyy");
         dateYearField.setBounds(635, 265, 40, 30);
-        addFocusAndKeyListener(dateYearField, "yyyy");
+        dateYearField.setBorder(null);
+        dateYearField.setForeground(new Color(160, 160, 160));
+        dateYearField.setBackground(new Color(238, 238, 238));
+        dateYearField.setFont(new java.awt.Font("Segoe UI", Font.PLAIN, 14));
         add(dateYearField);
+
+        dateYearField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    providerComboBox.requestFocusInWindow();
+                }
+            }
+        });
+
+        dateYearField.addFocusListener(new FocusAdapter() {
+            public void focusGained(FocusEvent evt) {
+                if (String.valueOf(dateYearField.getText()).equals("yyyy")) {
+                    dateYearField.setText("");
+                    dateYearField.setForeground(Color.BLACK);
+                }
+            }
+
+            public void focusLost(FocusEvent evt) {
+                if (String.valueOf(dateYearField.getText()).isEmpty()) {
+                    dateYearField.setText("yyyy");
+                    dateYearField.setForeground(new Color(160, 160, 160));
+                }
+            }
+        });
 
         jSeparator6 = new JSeparator();
         jSeparator6.setPreferredSize(new Dimension(600, 10));
@@ -383,51 +404,66 @@ public class NewProductFrame extends JFrame {
 
         datemonthField = new JTextField("mm");
         datemonthField.setBounds(595, 265, 25, 30);
-        addFocusAndKeyListener(datemonthField, "mm");
+        datemonthField.setBorder(null);
+        datemonthField.setForeground(new Color(160, 160, 160));
+        datemonthField.setBackground(new Color(238, 238, 238));
+        datemonthField.setFont(new java.awt.Font("Segoe UI", Font.PLAIN, 14));
         add(datemonthField);
 
-        dateDayField = new JTextField("dd");
-        dateDayField.setBounds(555, 265, 25, 30);
-        addFocusAndKeyListener(dateDayField, "dd");
-        add(dateDayField);
-    }
-
-    private void addFocusAndKeyListener(JTextField field, String placeholderText) {
-        field.setBorder(null);
-        field.setForeground(new Color(160, 160, 160));
-        field.setBackground(new Color(238, 238, 238));
-        field.setFont(new java.awt.Font("Segoe UI", Font.PLAIN, 14));
-
-        field.addFocusListener(new FocusAdapter() {
+        datemonthField.addKeyListener(new KeyAdapter() {
             @Override
-            public void focusGained(FocusEvent evt) {
-                if (field.getText().equals(placeholderText)) {
-                    field.setText("");
-                    field.setForeground(Color.BLACK);
-                }
-            }
-
-            @Override
-            public void focusLost(FocusEvent evt) {
-                if (field.getText().isEmpty()) {
-                    field.setText(placeholderText);
-                    field.setForeground(new Color(160, 160, 160));
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    dateYearField.requestFocusInWindow();
                 }
             }
         });
 
-        field.addKeyListener(new KeyAdapter() {
+        datemonthField.addFocusListener(new FocusAdapter() {
+            public void focusGained(FocusEvent evt) {
+                if (String.valueOf(datemonthField.getText()).equals("mm")) {
+                    datemonthField.setText("");
+                    datemonthField.setForeground(Color.BLACK);
+                }
+            }
+
+            public void focusLost(FocusEvent evt) {
+                if (String.valueOf(datemonthField.getText()).isEmpty()) {
+                    datemonthField.setText("mm");
+                    datemonthField.setForeground(new Color(160, 160, 160));
+                }
+            }
+        });
+
+        dateDayField = new JTextField("dd");
+        dateDayField.setBounds(555, 265, 25, 30);
+        dateDayField.setBorder(null);
+        dateDayField.setForeground(new Color(160, 160, 160));
+        dateDayField.setBackground(new Color(238, 238, 238));
+        dateDayField.setFont(new java.awt.Font("Segoe UI", Font.PLAIN, 14));
+        add(dateDayField);
+
+        dateDayField.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    // Mueve el foco al siguiente campo de fecha
-                    if (field == dateDayField) {
-                        datemonthField.requestFocusInWindow();
-                    } else if (field == datemonthField) {
-                        dateYearField.requestFocusInWindow();
-                    } else {
-                        providerField.requestFocusInWindow();
-                    }
+                    datemonthField.requestFocusInWindow();
+                }
+            }
+        });
+
+        dateDayField.addFocusListener(new FocusAdapter() {
+            public void focusGained(FocusEvent evt) {
+                if (String.valueOf(dateDayField.getText()).equals("dd")) {
+                    dateDayField.setText("");
+                    dateDayField.setForeground(Color.BLACK);
+                }
+            }
+
+            public void focusLost(FocusEvent evt) {
+                if (String.valueOf(dateDayField.getText()).isEmpty()) {
+                    dateDayField.setText("dd");
+                    dateDayField.setForeground(new Color(160, 160, 160));
                 }
             }
         });
@@ -437,32 +473,23 @@ public class NewProductFrame extends JFrame {
         providerLabel.setBounds(765, 235, 100, 30);
         add(providerLabel);
 
-        providerField = new JTextField("Ingresa el Proveedor");
-        providerField.setBounds(765, 265, 190, 30);
-        providerField.setForeground(new Color(160, 160, 160));
-        providerField.setBackground(new Color(238, 238, 238));
-        providerField.setBorder(null);
-        providerField.setFont(new java.awt.Font("Segoe UI", Font.PLAIN, 14));
-        add(providerField);    
-        
-        providerField.addFocusListener(new FocusAdapter() {
-            public void focusGained(FocusEvent evt) {
-                if (String.valueOf(providerField.getText()).equals("Ingresa el Proveedor")) {
-                    providerField.setText("");
-                    providerField.setForeground(Color.BLACK);
-                }
-            }
+        providerComboBox = new JComboBox<String>();
+        providerComboBox.setBounds(765, 265, 190, 30);
+        providerComboBox.setForeground(Color.BLACK);
+        providerComboBox.setBackground(new Color(238, 238, 238));
+        providerComboBox.setBorder(null);
+        providerComboBox.setFont(new java.awt.Font("Segoe UI", Font.PLAIN, 14));
+        providerComboBox.addItem("Seleccione un proveedor");
+        for (Proveedor proveedor : ProveedorRepositorio.obtenerProveedores()) {
+            String item = proveedor.getNombre();
+            providerComboBox.addItem(item);
+            System.out.println(item);
+        }
+        add(providerComboBox);
 
-            public void focusLost(FocusEvent evt) {
-                if (String.valueOf(providerField.getText()).isEmpty()) {
-                    providerField.setText("Ingresa el Proveedor");
-                    providerField.setForeground(new Color(160, 160, 160));
-                }
-            }
-        });
 
         // Foco y enter en JComboBox
-        providerField.addKeyListener(new KeyAdapter() {
+        providerComboBox.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
@@ -489,33 +516,55 @@ public class NewProductFrame extends JFrame {
         addProductButton.setFont(new java.awt.Font("Arial Narrow", 1, 22));
         add(addProductButton);
 
+        loadProductData();
+
         addProductButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int idint =  Integer.parseInt(idField.getText());
-                String productName =  new String(productNameField.getText());
-                String productCategory =  new String(productCategoryField.getText());
-                int amoundint = Integer.parseInt(amoundField.getText());
-                double price = Double.parseDouble(priceField.getText());
-                int idProveedor = obtenerIdProveedorSeleccionado();
-                int day = Integer.parseInt(dateDayField.getText());
-                int month = Integer.parseInt(datemonthField.getText());
-                int year = Integer.parseInt(dateYearField.getText());
-                LocalDate expirationDate = null;
-
-                ProductoServicio productoServicio = new ProductoServicio();
-
-                if (productoServicio.validarFecha(year, month, day)) {
-                    expirationDate = LocalDate.of(year, month, day);
+                try {
+                    int idint = Integer.parseInt(idField.getText());
+                    String productName = productNameField.getText();
+                    int productCategory = obtenerIdCategoriaSeleccionada();
+                    int amoundint = Integer.parseInt(amoundField.getText());
+                    double price = Double.parseDouble(priceField.getText());
+                    int idProveedor = obtenerIdProveedorSeleccionado();
+                    
+                    // Verificación de fecha
+                    String dayText = dateDayField.getText();
+                    String monthText = datemonthField.getText();
+                    String yearText = dateYearField.getText();
+                    LocalDate expirationDate = null;
+        
+                    if (!dayText.equals("dd") && !monthText.equals("mm") && !yearText.equals("yyyy")
+                            && !dayText.isEmpty() && !monthText.isEmpty() && !yearText.isEmpty()) {
+                        int day = Integer.parseInt(dayText);
+                        int month = Integer.parseInt(monthText);
+                        int year = Integer.parseInt(yearText);
+        
+                        if (new ProductoServicio().validarFecha(year, month, day)) {
+                            expirationDate = LocalDate.of(year, month, day);
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Por favor ingrese una fecha válida", "Error", JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
+                    }
+        
+                    ProductoServicio productoServicio = new ProductoServicio();
+        
                     if (idProveedor != -1) {
                         if (productoServicio.validacionInformacion(idint, productName, productCategory, amoundint, price, idProveedor)) {
-                            System.out.println(idint + " " + productName + " " + productCategory + " " + amoundint + " " + price + " " + expirationDate + " " + idProveedor);
                             Producto producto = new Producto(idint, productName, productCategory, amoundint, price, expirationDate, idProveedor);
                             ProductoRepositorio.crearProducto(producto);
-                            HistorialService historialServicio = new HistorialService();
-                            int idHistorial = historialServicio.obtenerMaxIdHistorial();
-                            Historial historial = new Historial(idHistorial, "Creacion", LocalDate.now(), idint, "Creacion de "+productName);
+        
+                            int idHistorial = HistorialService.loadHistorialId();
+                            Historial historial = new Historial(idHistorial, "Creacion", LocalDate.now(), idint, "Creacion de " + productName, "Productos");
                             HistorialRepository.crearHistorial(historial);
+                            HistorialService.actualizarIds();
+
+                            SerialId serialId = SerialIdRepository.obtenerSerialIdPorId(1);
+                            serialId.setLastidProducto(idint);
+                            SerialIdRepository.modificarSerialId(serialId);
+        
                             JOptionPane.showMessageDialog(null, "Producto agregado exitosamente", "Producto Agregado", JOptionPane.INFORMATION_MESSAGE);
                             dispose();
                         } else {
@@ -524,22 +573,39 @@ public class NewProductFrame extends JFrame {
                     } else {
                         JOptionPane.showMessageDialog(null, "Por favor seleccione un proveedor válido", "Error", JOptionPane.ERROR_MESSAGE);
                     }
-                } else {
-                    JOptionPane.showMessageDialog(null, "Por favor ingrese una fecha válida", "Error", JOptionPane.ERROR_MESSAGE);
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(null, "Error al convertir un valor numérico. Por favor revise los campos.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
+        
     }    
+
+    private void loadProductData() {
+        SerialId serialId = SerialIdRepository.obtenerSerialIdPorId(1);
+        int lastId = serialId.getLastidProducto();
+        idField.setText(String.valueOf(lastId + 1));        
+    }
+    
 
     // Método para obtener el ID del proveedor seleccionado
     public int obtenerIdProveedorSeleccionado() {
-        String nombreSeleccionado = providerField.getText(); 
+        String nombreSeleccionado = (String) providerComboBox.getSelectedItem();
+        System.out.println(nombreSeleccionado);
         Proveedor proveedor = ProveedorRepositorio.obtenerProveedorPorNombre(nombreSeleccionado);
         if (proveedor != null) {
             return proveedor.getId();
         } else {
             return -1;
         }
+    }
+
+    // Método para obtener el ID de la categoría seleccionada
+    public int obtenerIdCategoriaSeleccionada() {
+        String nombreSeleccionado = (String) productCategoryComboBox.getSelectedItem();
+        System.out.println(nombreSeleccionado);
+        int idCategoria = CategoryRepository.obtenerIdPorNombre(nombreSeleccionado);
+        return idCategoria;
     }
 
 

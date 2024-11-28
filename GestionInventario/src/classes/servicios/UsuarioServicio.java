@@ -1,7 +1,7 @@
-package servicios;
+package classes.servicios;
 
 import classes.Usuario;
-import repositorios.UsuarioRepositorio;
+import classes.repositorios.UsuarioRepositorio;
 
 public class UsuarioServicio {
     public boolean validarUsuario(String email, String password) {

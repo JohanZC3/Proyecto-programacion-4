@@ -1,4 +1,4 @@
-package uiproducts;
+package ui.uiproducts;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,17 +9,18 @@ import java.awt.event.KeyEvent;
 import java.time.LocalDate;
 
 import classes.*;
-import repositorios.ProductoRepositorio;
-import repositorios.ProveedorRepositorio;
-import servicios.ProductoServicio;
+import classes.repositorios.CategoryRepository;
+import classes.repositorios.ProductoRepositorio;
+import classes.repositorios.ProveedorRepositorio;
+import classes.servicios.ProductoServicio;
 import ui.*;
-import uihistorial.HistorialModal;
+import ui.uihistorial.HistorialModal;
 
 public class ProductUpdateFrame extends JFrame {
     private JTextField idField;
     private JTextField productNameField;
     private JLabel productCategoryLabel;
-    private JTextField productCategoryField;
+    private JComboBox<String> productCategoryComboBox;
     private JPanel verticalGoldPanel;
     private JLabel Welcome;
     private JLabel texto;
@@ -40,7 +41,7 @@ public class ProductUpdateFrame extends JFrame {
     private JTextField datemonthField;
     private JTextField dateYearField;
     private JLabel providerLabel;
-    private JTextField providerField;
+    private JComboBox<String> providerComboBox;
     private JSeparator jSeparator7;
     private JSeparator jSeparator6;
 
@@ -109,7 +110,7 @@ public class ProductUpdateFrame extends JFrame {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    productCategoryField.requestFocusInWindow();
+                    productCategoryComboBox.requestFocusInWindow();
                 }
             }
         });
@@ -125,16 +126,22 @@ public class ProductUpdateFrame extends JFrame {
         productCategoryLabel.setBounds(105, 160, 400, 30);
         add(productCategoryLabel);
 
-        productCategoryField = new JTextField("Ingrese aqui la categoria del producto");
-        productCategoryField.setBounds(105, 190, 400, 30);
-        productCategoryField.setBorder(null);
-        productCategoryField.setForeground(Color.BLACK);
-        productCategoryField.setBackground(new Color(238, 238, 238));
-        productCategoryField.setFont(new java.awt.Font("Segoe UI", 0, 14));
-        add(productCategoryField);
+        productCategoryComboBox = new JComboBox<String>();
+        productCategoryComboBox.setBounds(105, 190, 400, 30);
+        productCategoryComboBox.setForeground(Color.BLACK);
+        productCategoryComboBox.setBackground(new Color(238, 238, 238));
+        productCategoryComboBox.setBorder(null);
+        productCategoryComboBox.setFont(new java.awt.Font("Segoe UI", Font.PLAIN, 14));
+        productCategoryComboBox.addItem("Seleccione una categoria");
+        for (Category category : CategoryRepository.obtenerCategories()) {
+            String item = category.getNombre();
+            productCategoryComboBox.addItem(item);
+            System.out.println(item);
+        }
+        add(productCategoryComboBox);
 
         // Ejecutar acción de updateProductButton al presionar Enter
-        productCategoryField.addKeyListener(new KeyAdapter() {
+        productCategoryComboBox.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
@@ -159,7 +166,8 @@ public class ProductUpdateFrame extends JFrame {
         amoundField.setBorder(null);
         amoundField.setForeground(Color.BLACK);
         amoundField.setBackground(new Color(238, 238, 238));
-        amoundField.setFont(new java.awt.Font("Segoe UI", 0, 14));        
+        amoundField.setFont(new java.awt.Font("Segoe UI", 0, 14));  
+        amoundField.setEnabled(false);      
         add(amoundField);
 
         // Ejecutar acción de updateProductButton al presionar Enter
@@ -224,7 +232,7 @@ public class ProductUpdateFrame extends JFrame {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    providerField.requestFocusInWindow();
+                    providerComboBox.requestFocusInWindow();
                 }
             }
         });
@@ -272,18 +280,24 @@ public class ProductUpdateFrame extends JFrame {
         providerLabel = new JLabel("Proveedor:");
         providerLabel.setFont(new java.awt.Font("Arial Narrow", Font.BOLD, 20));
         providerLabel.setBounds(765, 235, 100, 30);
-        add(providerLabel);
+        add(providerLabel); 
 
-        providerField = new JTextField("Ingresa el Proveedor");
-        providerField.setBounds(765, 265, 190, 30);
-        providerField.setForeground(Color.BLACK);
-        providerField.setBackground(new Color(238, 238, 238));
-        providerField.setBorder(null);
-        providerField.setFont(new java.awt.Font("Segoe UI", Font.PLAIN, 14));
-        add(providerField);    
+        providerComboBox = new JComboBox<String>();
+        providerComboBox.setBounds(765, 265, 190, 30);
+        providerComboBox.setForeground(Color.BLACK);
+        providerComboBox.setBackground(new Color(238, 238, 238));
+        providerComboBox.setBorder(null);
+        providerComboBox.setFont(new java.awt.Font("Segoe UI", Font.PLAIN, 14));
+        for (Proveedor proveedor : ProveedorRepositorio.obtenerProveedores()) {
+            String item = proveedor.getNombre();
+            providerComboBox.addItem(item);
+            System.out.println(item);
+        }
+        add(providerComboBox);
+
 
         // Foco y enter en JComboBox
-        providerField.addKeyListener(new KeyAdapter() {
+        providerComboBox.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
@@ -315,27 +329,41 @@ public class ProductUpdateFrame extends JFrame {
         updateProductButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int idint =  Integer.parseInt(idField.getText());
-                String productName =  new String(productNameField.getText());
-                String productCategory =  new String(productCategoryField.getText());
-                int amoundint = Integer.parseInt(amoundField.getText());
-                double price = Double.parseDouble(priceField.getText());
-                int idProveedor = obtenerIdProveedorSeleccionado();
-                int day = Integer.parseInt(dateDayField.getText());
-                int month = Integer.parseInt(datemonthField.getText());
-                int year = Integer.parseInt(dateYearField.getText());
-                LocalDate expirationDate = null;
-
-                ProductoServicio productoServicio = new ProductoServicio();
-
-                if (productoServicio.validarFecha(year, month, day)) {
-                    expirationDate = LocalDate.of(year, month, day);
+                try {
+                    int idint = Integer.parseInt(idField.getText());
+                    String productName = productNameField.getText();
+                    int productCategory = obtenerIdCategoriaSeleccionada();
+                    int amoundint = Integer.parseInt(amoundField.getText());
+                    double price = Double.parseDouble(priceField.getText());
+                    int idProveedor = obtenerIdProveedorSeleccionado();
+                    
+                    // Verificación de fecha
+                    String dayText = dateDayField.getText();
+                    String monthText = datemonthField.getText();
+                    String yearText = dateYearField.getText();
+                    LocalDate expirationDate = null;
+        
+                    if (!dayText.equals("dd") && !monthText.equals("mm") && !yearText.equals("yyyy")
+                            && !dayText.isEmpty() && !monthText.isEmpty() && !yearText.isEmpty()) {
+                        int day = Integer.parseInt(dayText);
+                        int month = Integer.parseInt(monthText);
+                        int year = Integer.parseInt(yearText);
+        
+                        if (new ProductoServicio().validarFecha(year, month, day)) {
+                            expirationDate = LocalDate.of(year, month, day);
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Por favor ingrese una fecha válida", "Error", JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
+                    }
+        
+                    ProductoServicio productoServicio = new ProductoServicio();
                     if (idProveedor != -1) {
                         if (productoServicio.validacionInformacion(idint, productName, productCategory, amoundint, price, idProveedor)) {
                             System.out.println(idint + " " + productName + " " + productCategory + " " + amoundint + " " + price + " " + expirationDate + " " + idProveedor);
                             Producto producto = new Producto(idint, productName, productCategory, amoundint, price, expirationDate, idProveedor);
-                            ProductoRepositorio.modificarProveedor(productId, producto);
-                            HistorialModal historialModal = new HistorialModal(idint, "Modificacion");
+                            ProductoRepositorio.modificarProducto(productId, producto);
+                            HistorialModal historialModal = new HistorialModal(idint, "Modificacion", "productos");
                             historialModal.setVisible(true);
                             dispose();
                         } else {
@@ -344,8 +372,8 @@ public class ProductUpdateFrame extends JFrame {
                     } else {
                         JOptionPane.showMessageDialog(null, "Por favor seleccione un proveedor válido", "Error", JOptionPane.ERROR_MESSAGE);
                     }
-                } else {
-                    JOptionPane.showMessageDialog(null, "Por favor ingrese una fecha válida", "Error", JOptionPane.ERROR_MESSAGE);
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(null, "Error al convertir un valor numérico. Por favor revise los campos.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -353,7 +381,8 @@ public class ProductUpdateFrame extends JFrame {
 
     // Método para obtener el ID del proveedor seleccionado
     public int obtenerIdProveedorSeleccionado() {
-        String nombreSeleccionado = providerField.getText(); 
+        String nombreSeleccionado = (String) providerComboBox.getSelectedItem();
+        System.out.println(nombreSeleccionado);
         Proveedor proveedor = ProveedorRepositorio.obtenerProveedorPorNombre(nombreSeleccionado);
         if (proveedor != null) {
             return proveedor.getId();
@@ -362,23 +391,42 @@ public class ProductUpdateFrame extends JFrame {
         }
     }
 
+    // Método para obtener el ID de la categoría seleccionada
+    public int obtenerIdCategoriaSeleccionada() {
+        String nombreSeleccionado = (String) productCategoryComboBox.getSelectedItem();
+        System.out.println(nombreSeleccionado);
+        int idCategoria = CategoryRepository.obtenerIdPorNombre(nombreSeleccionado);
+        return idCategoria;
+    }
+
     private void loadProductData(int productId) {
         Producto producto = ProductoRepositorio.obtenerProductoPorId(productId);
         if (producto != null) {
             idField.setText(String.valueOf(producto.getId()));
             productNameField.setText(producto.getNombre());
-            productCategoryField.setText(producto.getCategoria());
+            productCategoryComboBox.setSelectedItem(CategoryRepository.obtenerCategoryPorId(producto.getCategoria()).getNombre());
             amoundField.setText(String.valueOf(producto.getCantidad()));
             priceField.setText(String.valueOf(producto.getPrecioUnitario()));
-            dateDayField.setText(String.valueOf(producto.getFechaExpiracion().getDayOfMonth()));
-            datemonthField.setText(String.valueOf(producto.getFechaExpiracion().getMonthValue()));
-            dateYearField.setText(String.valueOf(producto.getFechaExpiracion().getYear()));
-            providerField.setText(String.valueOf(ProveedorRepositorio.obtenerProveedorPorId(producto.getProveedorId()).getNombre()));
+    
+            // Validación para fecha de expiración
+            if (producto.getFechaExpiracion() != null) {
+                dateDayField.setText(String.valueOf(producto.getFechaExpiracion().getDayOfMonth()));
+                datemonthField.setText(String.valueOf(producto.getFechaExpiracion().getMonthValue()));
+                dateYearField.setText(String.valueOf(producto.getFechaExpiracion().getYear()));
+            } else {
+                // Dejar los campos en valores predeterminados si la fecha es null
+                dateDayField.setText("dd");
+                datemonthField.setText("mm");
+                dateYearField.setText("yyyy");
+            }
+    
+            providerComboBox.setSelectedItem(ProveedorRepositorio.obtenerProveedorPorId(producto.getProveedorId()).getNombre());
         } else {
             JOptionPane.showMessageDialog(this, "Producto no encontrado", "Error", JOptionPane.ERROR_MESSAGE);
             dispose();
         }
     }
+    
 
 
     public static void main(String[] args) {

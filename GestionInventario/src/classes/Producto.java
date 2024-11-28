@@ -6,13 +6,13 @@ public class Producto {
     // Id, nombre, categoría, cantidad, precio unitario, fecha de expiración y proveedor
     private int id;
     private String nombre;
-    private String categoria;
+    private int categoria;
     private int cantidad;
     private double precioUnitario;
     private LocalDate fechaExpiracion;
     private int proveedorId;  // Agregado para vinculación con proveedor
 
-    public Producto(int id, String nombre, String categoria, int cantidad, double precioUnitario, LocalDate fechaExpiracion, int proveedorId) {
+    public Producto(int id, String nombre, int categoria, int cantidad, double precioUnitario, LocalDate fechaExpiracion, int proveedorId) {
         this.id = id;
         this.nombre = nombre;
         this.categoria = categoria;
@@ -40,11 +40,11 @@ public class Producto {
         this.nombre = nombre;
     }
 
-    public String getCategoria() {
+    public int getCategoria() {
         return categoria;
     }
 
-    public void setCategoria(String categoria) {
+    public void setCategoria(int categoria) {
         this.categoria = categoria;
     }
 
