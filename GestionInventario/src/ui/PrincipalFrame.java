@@ -3,10 +3,11 @@ package ui;
 import javax.swing.*;
 
 import classes.*;
-import classes.repositorios.UsuarioRepositorio;
-import ui.uihistorial.HistorialFrame;
-import ui.uiproducts.InventaryFrame;
-import ui.uiproviders.ProvidersFrame;
+import classes.backUsuario.Usuario;
+import classes.backUsuario.UsuarioRepositorio;
+import ui.historial.HistorialFrame;
+import ui.productos.InventaryFrame;
+import ui.proveedores.ProvidersFrame;
 
 import java.awt.*;
 import java.awt.event.*;

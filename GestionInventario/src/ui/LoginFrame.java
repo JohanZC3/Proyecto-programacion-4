@@ -2,7 +2,7 @@ package ui;
 
 import javax.swing.*;
 
-import classes.servicios.UsuarioServicio;
+import classes.backUsuario.UsuarioServicio;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
