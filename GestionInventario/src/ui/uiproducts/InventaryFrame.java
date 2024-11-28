@@ -1,12 +1,14 @@
-package uiproducts;
+package ui.uiproducts;
 
 import javax.swing.*;
 import javax.swing.table.*;
 import classes.*;
-import repositorios.HistorialRepository;
-import repositorios.ProductoRepositorio;
-import servicios.HistorialService;
-import uihistorial.HistorialFrame;
+import classes.repositorios.CategoryRepository;
+import classes.repositorios.HistorialRepository;
+import classes.repositorios.ProductoRepositorio;
+import classes.repositorios.ProveedorRepositorio;
+import classes.servicios.HistorialService;
+import ui.uicategory.CategoryFrame;
 
 import java.awt.*;
 import java.time.LocalDate;
@@ -50,21 +52,21 @@ public class InventaryFrame extends JFrame {
         addButton.setFocusPainted(false);
         addButton.setFont(new Font("Arial Narrow", Font.BOLD, 22));
 
-        JButton historialButton = new JButton("Historial");
-        historialButton.setBackground(new Color(17, 59, 75));
-        historialButton.setForeground(new Color(228, 202, 151));
-        historialButton.setFocusPainted(false);
-        historialButton.setFont(new Font("Arial Narrow", Font.BOLD, 22));
+        JButton CategoryButton = new JButton("Categorias");
+        CategoryButton.setBackground(new Color(17, 59, 75));
+        CategoryButton.setForeground(new Color(228, 202, 151));
+        CategoryButton.setFocusPainted(false);
+        CategoryButton.setFont(new Font("Arial Narrow", Font.BOLD, 22));
 
         topPanel.add(searchField);
         topPanel.add(searchButton);
         topPanel.add(homeButton);
         topPanel.add(addButton);
-        topPanel.add(historialButton);
+        topPanel.add(CategoryButton);
         add(topPanel, BorderLayout.NORTH);
 
         // Configurar la tabla
-        String[] columnNames = { "ID", "Nombre", "Categoría", "Cantidad", "Precio Unitario", "Fecha de Expiración", "Acciones" };
+        String[] columnNames = { "ID", "Nombre", "Categoría", "Cantidad", "Precio Unitario", "Fecha de Expiración","proveedor", "Acciones" };
         tableModel = new DefaultTableModel(columnNames, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -101,6 +103,7 @@ public class InventaryFrame extends JFrame {
 
         // Listeners para botones
         homeButton.addActionListener(e -> dispose());
+        CategoryButton.addActionListener(e -> new CategoryFrame().ShowUpCategoryFrame());
 
         addButton.addActionListener(e -> {
             NewProductFrame newProductFrame = new NewProductFrame();
@@ -111,11 +114,6 @@ public class InventaryFrame extends JFrame {
         // Listener de búsqueda
         searchButton.addActionListener(e -> buscarProducto());
 
-        historialButton.addActionListener(e -> {
-            HistorialFrame historialFrame = new HistorialFrame();
-            historialFrame.setVisible(true);
-        });
-
         setVisible(true);
     }
 
@@ -125,10 +123,11 @@ public class InventaryFrame extends JFrame {
             Object[] rowData = {
                 producto.getId(),
                 producto.getNombre(),
-                producto.getCategoria(),
+                CategoryRepository.obtenerCategoryPorId(producto.getCategoria()).getNombre(),
                 producto.getCantidad(),
                 producto.getPrecioUnitario(),
                 producto.getFechaExpiracion(),
+                ProveedorRepositorio.obtenerProveedorPorId(producto.getProveedorId()).getNombre(),
                 "Acciones"
             };
             tableModel.addRow(rowData);
@@ -211,11 +210,11 @@ public class InventaryFrame extends JFrame {
                     if (confirm == JOptionPane.YES_OPTION) {
                         int id = (int) tableModel.getValueAt(row, 0);
                         ProductoRepositorio.eliminarProducto(id);
-                        HistorialService historialServicio = new HistorialService();
-                        int idHistorial = historialServicio.obtenerMaxIdHistorial();
-                        Historial historial = new Historial(idHistorial, "Eliminacion", LocalDate.now(), id, "Eliminacion de "+tableModel.getValueAt(row, 1));
+                        int historialId = HistorialService.loadHistorialId();
+                        Historial historial = new Historial(historialId, "Eliminacion", LocalDate.now(), id, "Eliminacion de producto "+tableModel.getValueAt(row, 1), "Productos");
                         HistorialRepository.crearHistorial(historial);
-                        tableModel.removeRow(row);
+                        actualizarTabla(ProductoRepositorio.obtenerProductos());
+                        HistorialService.actualizarIds();
                     }
                 }
             });
@@ -231,4 +230,5 @@ public class InventaryFrame extends JFrame {
             return "";
         }
     }
+
 }

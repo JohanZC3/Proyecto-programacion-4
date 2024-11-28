@@ -1,4 +1,4 @@
-package repositorios;
+package classes.repositorios;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -24,8 +24,8 @@ public class UsuarioRepositorio {
         cargarUsuariosDesdeJSON();
         if (usuarios.isEmpty()) {
             // Agregar datos de prueba
-            crearUsuario(new Usuario(1, "Juan", "Perez", "CC", "12345", "juan@example.com", "3118776765", true, "pJuan123"));
-            crearUsuario(new Usuario(2, "Maria", "Lopez", "CC", "67890", "maria@example.com", "3213322232", true, "pMaria456"));
+            crearUsuario(new Usuario(1, "Juan", "Perez", "CC", "12345", "juan@example.com", "3118776765", true, "administrador" ,"pJuan123"));
+            crearUsuario(new Usuario(2, "Maria", "Lopez", "CC", "67890", "maria@example.com", "3213322232", true, "auxiliar","pMaria456"));
         }
     }
 
@@ -44,6 +44,7 @@ public class UsuarioRepositorio {
                 usuario.setDireccion(usuarioModificado.getDireccion());
                 usuario.setTelefono(usuarioModificado.getTelefono());
                 usuario.setEstadoActivo(usuarioModificado.isEstadoActivo());
+                usuario.setTipoUsuario(usuarioModificado.getTipoUsuario());
                 usuario.setPassword(usuarioModificado.getPassword());
                 guardarUsuariosEnJSON();
                 break;

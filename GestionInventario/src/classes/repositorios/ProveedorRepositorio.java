@@ -1,4 +1,4 @@
-package repositorios;
+package classes.repositorios;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -63,6 +63,15 @@ public class ProveedorRepositorio {
         }
         return null;
     }
+    
+    public static int obtenerIdPorNombre(String nombre) {
+        for (Proveedor proveedor : proveedores) {
+            if (proveedor.getNombre().equalsIgnoreCase(nombre)) {
+                return proveedor.getId();
+            }
+        }
+        return -1; // Retornar -1 si no se encuentra el proveedor
+    }
 
     public static ArrayList<Proveedor> obtenerProveedores() {
         return new ArrayList<>(proveedores); // Retornar una copia para evitar modificaciones externas
@@ -84,19 +93,14 @@ public class ProveedorRepositorio {
     private static void cargarProveedoresDesdeJSON() {
         File archivo = new File(ARCHIVO_JSON);
         if (!archivo.exists()) {
-            proveedores = new ArrayList<>(); // Inicializar con una lista vacía si el archivo no existe
+            proveedores = new ArrayList<>();
             return;
         }
-
         try (FileReader reader = new FileReader(ARCHIVO_JSON)) {
-            Type tipoListaProveedores = new TypeToken<ArrayList<Proveedor>>(){}.getType();
+            Type tipoListaProveedores = new TypeToken<ArrayList<Proveedor>>() {}.getType();
             proveedores = gson.fromJson(reader, tipoListaProveedores);
-            if (proveedores == null) {
-                proveedores = new ArrayList<>(); // Si el archivo estaba vacío, inicializar como lista vacía
-            }
         } catch (IOException e) {
             System.out.println("Error al cargar proveedores desde JSON: " + e.getMessage());
-            proveedores = new ArrayList<>();
         }
     }
 

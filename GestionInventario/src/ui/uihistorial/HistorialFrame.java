@@ -1,4 +1,4 @@
-package uihistorial;
+package ui.uihistorial;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -15,13 +15,13 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import classes.Historial;
-import repositorios.HistorialRepository;
+import classes.repositorios.HistorialRepository;
 
 public class HistorialFrame extends JFrame{
     private DefaultTableModel tableModel;
 
     @SuppressWarnings("unused")
-    public HistorialFrame() {
+    public void mostrarHistorialFrame() {
         setTitle("Inventario Actual");
         setSize(1000, 400);
         setLocationRelativeTo(null);
@@ -42,7 +42,7 @@ public class HistorialFrame extends JFrame{
 
         homeButton.addActionListener(e -> dispose());
 
-        String[] columnNames = { "ID", "Accion", "fecha", "idProducto", "Razon"};
+        String[] columnNames = { "ID", "Accion", "fecha", "id afectado", "Tabla" ,"Razon"};
         tableModel = new DefaultTableModel(columnNames, 0);
         actualizarTabla(HistorialRepository.obtenerHistoriales());
 
@@ -66,6 +66,8 @@ public class HistorialFrame extends JFrame{
         panelConMargen.add(scrollPane, BorderLayout.CENTER);
 
         add(panelConMargen, BorderLayout.CENTER);
+
+        setVisible(true);
         
     }
 
@@ -76,7 +78,8 @@ public class HistorialFrame extends JFrame{
                 historial.getId(),
                 historial.getAccion(),
                 historial.getFecha(),
-                historial.getIdProducto(),
+                historial.getIdAfectado(),
+                historial.getTabla(),
                 historial.getRazon()
             };
             tableModel.addRow(rowData);

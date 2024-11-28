@@ -1,4 +1,4 @@
-package uiproviders;
+package ui.uiproviders;
 
 import javax.swing.*;
 import java.awt.*;
@@ -8,9 +8,10 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 import classes.*;
-import repositorios.ProveedorRepositorio;
-import servicios.ProveedorServicio;
+import classes.repositorios.ProveedorRepositorio;
+import classes.servicios.ProveedorServicio;
 import ui.LoginFrame;
+import ui.uihistorial.HistorialModal;
 
 public class ProvidersUpdateFrame extends JFrame {
     private JTextField idField;
@@ -180,7 +181,8 @@ public class ProvidersUpdateFrame extends JFrame {
 
                 if (ProveedorServicio.validarInformacion(providerId, providerName, providerAdress, phoneString)) {
                     ProveedorRepositorio.modificarProveedor(providerId, new Proveedor(providerId, providerName, providerAdress, phoneString));
-                    JOptionPane.showMessageDialog(null, "Proveedor actualizado exitosamente", "Proveedor Actualizado", JOptionPane.INFORMATION_MESSAGE);
+                    HistorialModal historialModal = new HistorialModal(providerId, "Modificacion", "proveedor");
+                    historialModal.setVisible(true);
                     dispose();
                 } else {
                     JOptionPane.showMessageDialog(null, "Por favor ingrese todos los campos", "Error", JOptionPane.ERROR_MESSAGE);

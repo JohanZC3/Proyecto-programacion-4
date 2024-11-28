@@ -1,4 +1,4 @@
-package servicios;
+package classes.servicios;
 
 public class ProveedorServicio {
     public static boolean validarInformacion(int id, String nombre, String direccion, String telefono) {
