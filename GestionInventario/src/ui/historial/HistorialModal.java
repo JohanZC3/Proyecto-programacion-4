@@ -3,6 +3,8 @@ package ui.historial;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
@@ -26,13 +28,21 @@ public class HistorialModal extends JFrame{
     JButton button;
     JSeparator separator;
 
+    @Override
+    public Image getIconImage() {
+        Image retValue = Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("image/logo.png"));
+        return retValue;
+    }
+
     public HistorialModal(int idCambio, String accion, String tabla) {
         setTitle("Historial de Inventario");
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(500, 180);
         setLocationRelativeTo(null);
         setLayout(null);
         setResizable(false);
         setUndecorated(true);
+        setIconImage(getIconImage());
 
         panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));

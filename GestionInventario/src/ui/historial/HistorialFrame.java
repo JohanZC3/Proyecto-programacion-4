@@ -1,18 +1,9 @@
 package ui.historial;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.util.List;
-
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
+import java.awt.*;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.util.List;
 
 import classes.backHistorial.Historial;
 import classes.backHistorial.HistorialRepository;
@@ -20,13 +11,21 @@ import classes.backHistorial.HistorialRepository;
 public class HistorialFrame extends JFrame{
     private DefaultTableModel tableModel;
 
+    @Override
+    public Image getIconImage() {
+        Image retValue = Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("image/logo.png"));
+        return retValue;
+    }
+
     @SuppressWarnings("unused")
     public void mostrarHistorialFrame() {
         setTitle("Inventario Actual");
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(1000, 400);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
         setResizable(false);
+        setIconImage(getIconImage());
 
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new FlowLayout(FlowLayout.CENTER));

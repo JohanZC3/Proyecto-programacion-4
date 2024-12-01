@@ -7,7 +7,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-import classes.*;
 import classes.backProveedor.Proveedor;
 import classes.backProveedor.ProveedorRepositorio;
 import classes.backProveedor.ProveedorServicio;
@@ -32,14 +31,21 @@ public class ProvidersUpdateFrame extends JFrame {
     private JSeparator jSeparator4;
     private JButton updateProviderButton;
 
+    @Override
+    public Image getIconImage() {
+        Image retValue = Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("image/logo.png"));
+        return retValue;
+    }
+
     public ProvidersUpdateFrame(int providerId) {
         setTitle("Modificar Proveedor");
         setSize(1000, 350);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setBackground(new Color(255, 255, 255));
         setResizable(false);
         setLocationRelativeTo(null);
         setLayout(null);
+        setIconImage(getIconImage());
 
         verticalGoldPanel = new JPanel();
         verticalGoldPanel.setBackground(new Color(199, 182, 145));

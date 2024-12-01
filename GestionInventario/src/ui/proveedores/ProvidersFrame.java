@@ -7,7 +7,7 @@ import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.time.LocalDate;
 
-import classes.*;
+
 import classes.backHistorial.Historial;
 import classes.backHistorial.HistorialRepository;
 import classes.backHistorial.HistorialService;
@@ -20,13 +20,21 @@ public class ProvidersFrame extends JFrame {
 
     private DefaultTableModel tableModel;
 
+    @Override
+    public Image getIconImage() {
+        Image retValue = Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("image/logo.png"));
+        return retValue;
+    }
+
     @SuppressWarnings("unused")
     public void mostrarProveedores() {
         setTitle("Proveedores Actuales");
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(1000, 400);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
         setResizable(false);
+        setIconImage(getIconImage());
 
         // Panel superior con botones
         JPanel topPanel = new JPanel();
@@ -39,8 +47,8 @@ public class ProvidersFrame extends JFrame {
         homeButton.setFont(new Font("Arial Narrow", Font.BOLD, 22));
 
         JButton addButton = new JButton("Agregar Proveedor");
-        addButton.setBackground(new Color(17, 59, 75));
-        addButton.setForeground(new Color(228, 202, 151));
+        addButton.setBackground(new Color(255,255,255));
+        addButton.setForeground(new Color(0,0,0));
         addButton.setFocusPainted(false);
         addButton.setFont(new Font("Arial Narrow", Font.BOLD, 22));
 

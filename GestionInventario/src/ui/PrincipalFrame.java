@@ -13,6 +13,12 @@ import java.awt.event.*;
 public class PrincipalFrame extends JFrame {
     private JLabel welcomeLabel;
 
+    @Override
+    public Image getIconImage() {
+        Image retValue = Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("image/logo.png"));
+        return retValue;
+    }
+
     @SuppressWarnings("unused")
     public PrincipalFrame(String email) {
         setTitle("Pantalla Principal");
@@ -21,6 +27,7 @@ public class PrincipalFrame extends JFrame {
         setLocationRelativeTo(null);
         setResizable(false);
         setLayout(null);
+        setIconImage(getIconImage());
 
         Usuario usuario = UsuarioRepositorio.obtenerUsuarioPorEmail(email);
 

@@ -25,6 +25,12 @@ public class LoginFrame extends JFrame {
     private JSeparator jSeparator2;
     private JButton loginButton;
 
+    @Override
+    public Image getIconImage() {
+        Image retValue = Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("image/logo.png"));
+        return retValue;
+    }
+
     public LoginFrame() {
         usuarioServicio = new UsuarioServicio();
 
@@ -35,6 +41,7 @@ public class LoginFrame extends JFrame {
         setResizable(false);
         setLocationRelativeTo(null);
         setLayout(null);
+        setIconImage(getIconImage());
 
         verticalGoldPanel = new JPanel();
         verticalGoldPanel.setBackground(new Color(199, 182, 145));

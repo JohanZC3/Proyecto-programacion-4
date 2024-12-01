@@ -21,18 +21,26 @@ public class InventaryFrame extends JFrame {
     private JTextField searchField;
     private DefaultTableModel tableModel;
 
+    @Override
+    public Image getIconImage() {
+        Image retValue = Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("image/logo.png"));
+        return retValue;
+    }
+
     @SuppressWarnings("unused")
     public void ShowUpInventaryFrame() {
         setTitle("Inventario Actual");
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(1000, 400);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
         setResizable(false);
+        setIconImage(getIconImage());
 
         // Panel superior con botones y campo de búsqueda
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-        JPanel toptopPanel = new JPanel();
+        JPanel searchPanel = new JPanel();
         topPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
 
         searchField = new JTextField(20);
@@ -70,14 +78,20 @@ public class InventaryFrame extends JFrame {
         proveedoresButton.setFont(new java.awt.Font("Arial Narrow", 1, 22));
 
 
-        toptopPanel.add(searchField);
-        toptopPanel.add(searchButton);
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+
+
+        searchPanel.add(searchField);
+        searchPanel.add(searchButton);
         topPanel.add(homeButton);
         topPanel.add(addButton);
         topPanel.add(proveedoresButton);
         topPanel.add(CategoryButton);
-        add(topPanel, BorderLayout.NORTH);
-        add(toptopPanel);
+        mainPanel.add(topPanel);
+        mainPanel.add(searchPanel);
+
+
 
         // Configurar la tabla
         String[] columnNames = { "ID", "Nombre", "Categoría", "Cantidad", "Precio Unitario", "Fecha de Expiración","proveedor", "Acciones" };
@@ -113,7 +127,9 @@ public class InventaryFrame extends JFrame {
         panelConMargen.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         panelConMargen.add(scrollPane, BorderLayout.CENTER);
 
-        add(panelConMargen, BorderLayout.CENTER);
+        mainPanel.add(scrollPane);
+        add(mainPanel, BorderLayout.CENTER);
+
 
         // Listeners para botones
         homeButton.addActionListener(e -> dispose());

@@ -2,6 +2,8 @@ package ui.category;
 
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
@@ -40,16 +42,23 @@ public class UpdateCategoryFrame extends JFrame {
     private JLabel categoryDescriptionLabel;
     private JTextField categoryDescriptionField;
 
+    @Override
+    public Image getIconImage() {
+        Image retValue = Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("image/logo.png"));
+        return retValue;
+    }
+
 
     public UpdateCategoryFrame(int categoryId) {
 
         setTitle("modificar Categoria");
         setSize(1000, 400);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setBackground(new Color(255, 255, 255));
         setResizable(false);
         setLocationRelativeTo(null);
         setLayout(null);
+        setIconImage(getIconImage());
 
         verticalGoldPanel = new JPanel();
         verticalGoldPanel.setBackground(new Color(199, 182, 145));
@@ -246,7 +255,6 @@ public class UpdateCategoryFrame extends JFrame {
             categoryDescriptionField.setText(category.getDescripcion());
         } else {
             JOptionPane.showMessageDialog(this, "Categoria no encontrada", "Error", JOptionPane.ERROR_MESSAGE);
-            dispose();
         }
     }
 

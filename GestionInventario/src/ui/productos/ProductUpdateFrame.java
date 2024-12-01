@@ -8,7 +8,6 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.time.LocalDate;
 
-import classes.*;
 import classes.backCategoria.Category;
 import classes.backCategoria.CategoryRepository;
 import classes.backProducto.Producto;
@@ -48,16 +47,23 @@ public class ProductUpdateFrame extends JFrame {
     private JSeparator jSeparator7;
     private JSeparator jSeparator6;
 
+    @Override
+    public Image getIconImage() {
+        Image retValue = Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("image/logo.png"));
+        return retValue;
+    }
+
 
     public ProductUpdateFrame(int productId) {
 
         setTitle("Modificar Producto");
         setSize(1000, 400);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setBackground(new Color(255, 255, 255));
         setResizable(false);
         setLocationRelativeTo(null);
         setLayout(null);
+        setIconImage(getIconImage());
 
         verticalGoldPanel = new JPanel();
         verticalGoldPanel.setBackground(new Color(199, 182, 145));

@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -32,13 +34,21 @@ import ui.productos.ProductUpdateFrame;
 public class CategoryFrame extends JFrame{
     private DefaultTableModel tableModel;
 
+    @Override
+    public Image getIconImage() {
+        Image retValue = Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("image/logo.png"));
+        return retValue;
+    }
+
     @SuppressWarnings("unused")
     public void ShowUpCategoryFrame() {
         setTitle("categorias");
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(1000, 400);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
         setResizable(false);
+        setIconImage(getIconImage());
 
         // Panel superior con botones y campo de búsqueda
         JPanel topPanel = new JPanel();
