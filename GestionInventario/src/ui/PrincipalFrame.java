@@ -2,12 +2,10 @@ package ui;
 
 import javax.swing.*;
 
-import classes.*;
 import classes.backUsuario.Usuario;
 import classes.backUsuario.UsuarioRepositorio;
 import ui.historial.HistorialFrame;
 import ui.productos.InventaryFrame;
-import ui.proveedores.ProvidersFrame;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -53,15 +51,6 @@ public class PrincipalFrame extends JFrame {
         inventarioButton.setFocusable(false);  // Evitar enfoque inicial
         add(inventarioButton);
 
-        // Botón para ver proveedores
-        JButton proveedoresButton = new JButton("Mostrar Proveedores");
-        proveedoresButton.setBounds(50, 150, 300, 50);
-        proveedoresButton.setBackground(new Color(17, 59, 75));
-        proveedoresButton.setForeground(new Color(228, 202, 151));
-        proveedoresButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        proveedoresButton.setFont(new java.awt.Font("Arial Narrow", 1, 22));
-        proveedoresButton.setFocusable(false);  // Evitar enfoque inicial
-        add(proveedoresButton);
 
         // Botón para ver Historial de Acciones
         JButton HistorialButton = new JButton("Mostrar Historial");
@@ -76,8 +65,8 @@ public class PrincipalFrame extends JFrame {
         // Botón para cerrar sesión
         JButton logoutButton = new JButton("Cerrar sesión");
         logoutButton.setBounds(50, 290, 300, 50);
-        logoutButton.setBackground(new Color(17, 59, 75));
-        logoutButton.setForeground(new Color(228, 202, 151));
+        logoutButton.setBackground(new Color(150, 150, 150));
+        logoutButton.setForeground(new Color(0, 0, 0));
         logoutButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         logoutButton.setFont(new java.awt.Font("Arial Narrow", 1, 22));
         logoutButton.setFocusable(false);  // Evitar enfoque inicial
@@ -85,7 +74,6 @@ public class PrincipalFrame extends JFrame {
 
         // Agregar acción para cada botón
         inventarioButton.addActionListener(e -> new InventaryFrame().ShowUpInventaryFrame());
-        proveedoresButton.addActionListener(e -> new ProvidersFrame().mostrarProveedores());
         HistorialButton.addActionListener(e -> new HistorialFrame().mostrarHistorialFrame());
         logoutButton.addActionListener(e -> {
             new LoginFrame().setVisible(true);
@@ -106,9 +94,6 @@ public class PrincipalFrame extends JFrame {
         inventarioButton.getInputMap(JComponent.WHEN_FOCUSED).put(enterKey, "click");
         inventarioButton.getActionMap().put("click", action);
 
-        proveedoresButton.getInputMap(JComponent.WHEN_FOCUSED).put(enterKey, "click");
-        proveedoresButton.getActionMap().put("click", action);
-
         logoutButton.getInputMap(JComponent.WHEN_FOCUSED).put(enterKey, "click");
         logoutButton.getActionMap().put("click", action);
 
@@ -117,7 +102,6 @@ public class PrincipalFrame extends JFrame {
             @Override
             public void windowGainedFocus(WindowEvent e) {
                 inventarioButton.setFocusable(true);
-                proveedoresButton.setFocusable(true);
                 logoutButton.setFocusable(true);
             }
         });

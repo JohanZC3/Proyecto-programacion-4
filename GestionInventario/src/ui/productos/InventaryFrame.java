@@ -2,7 +2,6 @@ package ui.productos;
 
 import javax.swing.*;
 import javax.swing.table.*;
-import classes.*;
 import classes.backCategoria.CategoryRepository;
 import classes.backHistorial.Historial;
 import classes.backHistorial.HistorialRepository;
@@ -11,6 +10,7 @@ import classes.backProducto.Producto;
 import classes.backProducto.ProductoRepositorio;
 import classes.backProveedor.ProveedorRepositorio;
 import ui.category.CategoryFrame;
+import ui.proveedores.ProvidersFrame;
 
 import java.awt.*;
 import java.time.LocalDate;
@@ -32,6 +32,8 @@ public class InventaryFrame extends JFrame {
         // Panel superior con botones y campo de búsqueda
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        JPanel toptopPanel = new JPanel();
+        topPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
 
         searchField = new JTextField(20);
         searchField.setFont(new Font("Arial Narrow", Font.PLAIN, 18));
@@ -49,23 +51,33 @@ public class InventaryFrame extends JFrame {
         homeButton.setFont(new Font("Arial Narrow", Font.BOLD, 22));
 
         JButton addButton = new JButton("Agregar Producto");
-        addButton.setBackground(new Color(17, 59, 75));
-        addButton.setForeground(new Color(228, 202, 151));
+        addButton.setBackground(new Color(255,255,255));
+        addButton.setForeground(new Color(0,0,0));
         addButton.setFocusPainted(false);
         addButton.setFont(new Font("Arial Narrow", Font.BOLD, 22));
 
         JButton CategoryButton = new JButton("Categorias");
-        CategoryButton.setBackground(new Color(17, 59, 75));
-        CategoryButton.setForeground(new Color(228, 202, 151));
+        CategoryButton.setBackground(new Color(255,255,255));
+        CategoryButton.setForeground(new Color(0,0,0));
         CategoryButton.setFocusPainted(false);
         CategoryButton.setFont(new Font("Arial Narrow", Font.BOLD, 22));
 
-        topPanel.add(searchField);
-        topPanel.add(searchButton);
+        JButton proveedoresButton = new JButton("Mostrar Proveedores");
+        proveedoresButton.setBounds(50, 150, 300, 50);
+        proveedoresButton.setBackground(new Color(255,255,255));
+        proveedoresButton.setForeground(new Color(0,0,0));
+        proveedoresButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        proveedoresButton.setFont(new java.awt.Font("Arial Narrow", 1, 22));
+
+
+        toptopPanel.add(searchField);
+        toptopPanel.add(searchButton);
         topPanel.add(homeButton);
         topPanel.add(addButton);
+        topPanel.add(proveedoresButton);
         topPanel.add(CategoryButton);
         add(topPanel, BorderLayout.NORTH);
+        add(toptopPanel);
 
         // Configurar la tabla
         String[] columnNames = { "ID", "Nombre", "Categoría", "Cantidad", "Precio Unitario", "Fecha de Expiración","proveedor", "Acciones" };
@@ -105,6 +117,7 @@ public class InventaryFrame extends JFrame {
 
         // Listeners para botones
         homeButton.addActionListener(e -> dispose());
+        proveedoresButton.addActionListener(e -> new ProvidersFrame().mostrarProveedores());
         CategoryButton.addActionListener(e -> new CategoryFrame().ShowUpCategoryFrame());
 
         addButton.addActionListener(e -> {
