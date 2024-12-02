@@ -245,6 +245,9 @@ public class NewCategoryFrame extends JFrame {
                 }
                 CategoryRepository.crearCategory(new Category(idInt, nombre, descripcion));
                 JOptionPane.showMessageDialog(null, "Categoria agregada exitosamente", "Exito", JOptionPane.INFORMATION_MESSAGE);
+                SerialId serialId = SerialIdRepository.obtenerSerialIdPorId(1);
+                serialId.setLastidCategory(idInt);
+                SerialIdRepository.modificarSerialId(serialId);
                 dispose();
             }
         });
@@ -254,7 +257,8 @@ public class NewCategoryFrame extends JFrame {
     private void loadCategoryData() {
         SerialId serialId = SerialIdRepository.obtenerSerialIdPorId(1);
         int lastId = serialId.getLastidCategory();
-        idField.setText(String.valueOf(lastId + 1)); 
+        lastId++;
+        idField.setText(String.valueOf(lastId)); 
     }
 
 

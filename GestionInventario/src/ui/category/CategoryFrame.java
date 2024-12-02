@@ -25,11 +25,11 @@ import javax.swing.table.TableColumn;
 
 import classes.backCategoria.Category;
 import classes.backCategoria.CategoryRepository;
+import classes.backCategoria.CategoryService;
 import classes.backHistorial.Historial;
 import classes.backHistorial.HistorialRepository;
 import classes.backSerialId.SerialId;
 import classes.backSerialId.SerialIdRepository;
-import ui.productos.ProductUpdateFrame;
 
 public class CategoryFrame extends JFrame{
     private DefaultTableModel tableModel;
@@ -61,8 +61,8 @@ public class CategoryFrame extends JFrame{
         homeButton.setFont(new Font("Arial Narrow", Font.BOLD, 22));
 
         JButton addButton = new JButton("Agregar categoria");
-        addButton.setBackground(new Color(17, 59, 75));
-        addButton.setForeground(new Color(228, 202, 151));
+        addButton.setBackground(new Color(255,255,255));
+        addButton.setForeground(new Color(0,0,0));
         addButton.setFocusPainted(false);
         addButton.setFont(new Font("Arial Narrow", Font.BOLD, 22));
 
@@ -186,8 +186,8 @@ public class CategoryFrame extends JFrame{
                 int row = table.getSelectedRow();
                 if (row >= 0) {
                     int id = (int) tableModel.getValueAt(row, 0);
-                    ProductUpdateFrame productUpdateFrame = new ProductUpdateFrame(id);
-                    productUpdateFrame.setVisible(true);
+                    UpdateCategoryFrame updateCategoryFrame = new UpdateCategoryFrame(id);
+                    updateCategoryFrame.setVisible(true);
                     dispose();
                 }
             });
@@ -200,6 +200,7 @@ public class CategoryFrame extends JFrame{
                             JOptionPane.YES_NO_OPTION);
                     if (confirm == JOptionPane.YES_OPTION) {
                         int id = (int) tableModel.getValueAt(row, 0);
+                        CategoryService.categoryChange(id);
                         CategoryRepository.eliminarCategory(id);
                         actualizarTabla(CategoryRepository.obtenerCategories());
                         int historialId = loadHistorialId();

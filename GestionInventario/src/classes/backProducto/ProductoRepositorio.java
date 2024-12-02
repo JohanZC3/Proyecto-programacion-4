@@ -76,7 +76,7 @@ public class ProductoRepositorio {
     }
     }
 
-    private static void guardarProductosEnJSON() {
+    public static void guardarProductosEnJSON() {
         try (FileWriter writer = new FileWriter(ARCHIVO_JSON)) {
             gson.toJson(productos, writer);
         } catch (IOException e) {
@@ -127,6 +127,17 @@ public class ProductoRepositorio {
         }
     }
     return productosFiltrados;
-}
+    }
+
+    public static List<Producto> obtenerProductosPorCategoryId(int CategoryId) {
+        List<Producto> productosFiltrados = new ArrayList<>();
+        for (Producto producto : productos) {
+            if (producto.getCategoria() == CategoryId) 
+            {
+                productosFiltrados.add(producto);
+            }
+        }
+        return productosFiltrados;
+        }
 
 }

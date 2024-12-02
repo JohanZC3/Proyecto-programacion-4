@@ -23,6 +23,7 @@ public class CategoryRepository {
         cargarCategoriesDesdeJSON();
         if (categories.isEmpty()) {
             // Agregar datos de prueba
+            crearCategory(new Category(0, "null", "null"));
             crearCategory(new Category(1, "Electrodomesticos", "Electrodomesticos para el hogar"));
             crearCategory(new Category(2, "Tecnologia", "Dispositivos tecnologicos"));
         }

@@ -139,12 +139,12 @@ public class ProvidersUpdateFrame extends JFrame {
         jSeparator3.setBounds(105, 220, 400, 5);
         add(jSeparator3);
 
-        phoneLabel = new JLabel("Numero del proveedor:");
+        phoneLabel = new JLabel("Numero de telefono:");
         phoneLabel.setFont(new java.awt.Font("Arial Narrow", 1, 20));
         phoneLabel.setBounds(555, 160, 400, 30);
         add(phoneLabel);
 
-        phoneField = new JTextField();
+        phoneField = new JTextField("Ingrese aqui el numero de telefono del proveedor");
         phoneField.setBounds(555, 190, 400, 30);
         phoneField.setBorder(null);
         phoneField.setForeground(Color.BLACK);
