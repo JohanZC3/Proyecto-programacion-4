@@ -18,6 +18,8 @@ import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class ProductoRepositorio {
     private static ArrayList<Producto> productos = new ArrayList<>();
@@ -187,6 +189,41 @@ public class ProductoRepositorio {
                     HistorialService.actualizarIds();
                     break;
                 }
+            }
+        }
+    }
+
+    public static void exportarProductosACSV() {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Guardar archivo CSV");
+        fileChooser.setFileFilter(new FileNameExtensionFilter("Archivo CSV", "csv"));
+        
+        int userSelection = fileChooser.showSaveDialog(null);
+        
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            File fileToSave = fileChooser.getSelectedFile();
+            String filePath = fileToSave.getAbsolutePath();
+            
+            if (!filePath.endsWith(".csv")) {
+                filePath += ".csv";
+            }
+            
+            try (FileWriter writer = new FileWriter(filePath)) {
+                writer.append("Nombre del Producto,Cantidad,Precio,Costo Total\n");
+                for (Producto producto : productos) {
+                    double costoTotal = producto.getCantidad() * producto.getPrecioUnitario();
+                    writer.append(producto.getNombre())
+                          .append(",")
+                          .append(String.valueOf(producto.getCantidad()))
+                          .append(",")
+                          .append(String.valueOf(producto.getPrecioUnitario()))
+                          .append(",")
+                          .append(String.valueOf(costoTotal))
+                          .append("\n");
+                }
+                System.out.println("Archivo CSV guardado en: " + filePath);
+            } catch (IOException e) {
+                System.out.println("Error al guardar archivo CSV: " + e.getMessage());
             }
         }
     }

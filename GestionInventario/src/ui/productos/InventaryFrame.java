@@ -89,6 +89,13 @@ public class InventaryFrame extends JFrame {
         proveedoresButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         proveedoresButton.setFont(new java.awt.Font("Arial Narrow", 1, 22));
 
+        JButton exportButton = new JButton("Exportar a csv");
+        exportButton.setBackground(new Color(255,255,255));
+        exportButton.setForeground(new Color(0,0,0));
+        exportButton.setFocusPainted(false);
+        exportButton.setFont(new Font("Arial Narrow", Font.BOLD, 22));
+
+
 
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
@@ -97,6 +104,7 @@ public class InventaryFrame extends JFrame {
         searchPanel.add(searchField);
         searchPanel.add(searchButton);
         topPanel.add(homeButton);
+        topPanel.add(exportButton);
         topPanel.add(addButton);
         tablePanel.add(proveedoresButton);
         tablePanel.add(CategoryButton);
@@ -157,6 +165,7 @@ public class InventaryFrame extends JFrame {
 
         // Listeners para botones
         homeButton.addActionListener(e -> dispose());
+        exportButton.addActionListener(e -> ProductoRepositorio.exportarProductosACSV());
         proveedoresButton.addActionListener(e -> new ProvidersFrame().mostrarProveedores(userId));
         CategoryButton.addActionListener(e -> {new CategoryFrame().ShowUpCategoryFrame(userId);
         dispose();});
