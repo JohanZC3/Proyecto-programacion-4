@@ -211,9 +211,11 @@ public class NewProductFrame extends JFrame {
         productCategoryComboBox.setFont(new java.awt.Font("Segoe UI", Font.PLAIN, 14));
         productCategoryComboBox.addItem("Seleccione una categoria");
         for (Category category : CategoryRepository.obtenerCategories()) {
-            String item = category.getNombre();
-            productCategoryComboBox.addItem(item);
-            //System.out.println(item);
+            if (category.getId() != 0){
+                String item = category.getNombre();
+                productCategoryComboBox.addItem(item);
+                //System.out.println(item);
+            }
         }
         add(productCategoryComboBox);
 
