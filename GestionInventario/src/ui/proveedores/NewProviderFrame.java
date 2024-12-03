@@ -46,7 +46,7 @@ public class NewProviderFrame extends JFrame {
     }
 
 
-    public NewProviderFrame() {
+    public NewProviderFrame(int userId) {
 
         setTitle("Añadir Proveedor");
         setSize(1000, 350);
@@ -311,7 +311,7 @@ public class NewProviderFrame extends JFrame {
                 if (ProveedorServicio.validarInformacion(idint, providerName, providerAdress, phoneString)) {
                     ProveedorRepositorio.crearProveedor(new Proveedor(idint, providerName, providerAdress, phoneString));
                     int idHistorial = HistorialService.loadHistorialId();
-                    Historial historial = new Historial(idHistorial, "Creacion", LocalDate.now(), idint, "Creacion de " + providerName, "Proveedor");
+                    Historial historial = new Historial(idHistorial, userId,"Creacion", LocalDate.now(), idint, "Creacion de " + providerName, "Proveedor");
                     HistorialRepository.crearHistorial(historial);
                     HistorialService.actualizarIds();
 

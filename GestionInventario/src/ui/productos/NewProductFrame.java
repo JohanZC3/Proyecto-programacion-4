@@ -37,8 +37,10 @@ public class NewProductFrame extends JFrame {
     private JSeparator jSeparator1;
     private JSeparator jSeparator2;
     private JSeparator jSeparator3;
-    private JTextField amoundField;
-    private JLabel amoundLabel;
+    private JTextField minimaField;
+    private JLabel maximaLabel;
+    private JTextField maximaField;
+    private JLabel minimaLabel;
     private JSeparator jSeparator4;
     private JTextField priceField;
     private JLabel priceLabel;
@@ -52,6 +54,7 @@ public class NewProductFrame extends JFrame {
     private JComboBox<String> providerComboBox;
     private JSeparator jSeparator7;
     private JSeparator jSeparator6;
+    private JSeparator jSeparator8;
 
     @Override
     public Image getIconImage() {
@@ -60,7 +63,7 @@ public class NewProductFrame extends JFrame {
     }
 
 
-    public NewProductFrame() {
+    public NewProductFrame(int userId) {
 
         setTitle("Añadir Producto");
         setSize(1000, 400);
@@ -210,7 +213,7 @@ public class NewProductFrame extends JFrame {
         for (Category category : CategoryRepository.obtenerCategories()) {
             String item = category.getNombre();
             productCategoryComboBox.addItem(item);
-            System.out.println(item);
+            //System.out.println(item);
         }
         add(productCategoryComboBox);
 
@@ -219,7 +222,7 @@ public class NewProductFrame extends JFrame {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    amoundField.requestFocusInWindow();
+                    minimaField.requestFocusInWindow();
                 }
             }
         });
@@ -230,27 +233,27 @@ public class NewProductFrame extends JFrame {
         jSeparator3.setBounds(105, 220, 400, 5);
         add(jSeparator3);
 
-        amoundLabel = new JLabel("Cantidad del Producto:");
-        amoundLabel.setFont(new java.awt.Font("Arial Narrow", 1, 20));
-        amoundLabel.setBounds(555, 160, 400, 30);
-        add(amoundLabel);
+        minimaLabel = new JLabel("Cantidad minima:");
+        minimaLabel.setFont(new java.awt.Font("Arial Narrow", 1, 20));
+        minimaLabel.setBounds(555, 160, 190, 30);
+        add(minimaLabel);
 
-        amoundField = new JTextField("Ingrese aqui la cantidad del producto");
-        amoundField.setBounds(555, 190, 400, 30);
-        amoundField.setBorder(null);
-        amoundField.setForeground(new Color(160, 160, 160));
-        amoundField.setBackground(new Color(238, 238, 238));
-        amoundField.setFont(new java.awt.Font("Segoe UI", 0, 14));
+        minimaField = new JTextField("Ingrese aqui la cantidad minima del producto");
+        minimaField.setBounds(555, 190, 190, 30);
+        minimaField.setBorder(null);
+        minimaField.setForeground(new Color(160, 160, 160));
+        minimaField.setBackground(new Color(238, 238, 238));
+        minimaField.setFont(new java.awt.Font("Segoe UI", 0, 14));
         
         // Agregar KeyListener para solo permitir números
-        amoundField.addKeyListener(new KeyAdapter() {
+        minimaField.addKeyListener(new KeyAdapter() {
             @Override
             public void keyTyped(KeyEvent e) {
                 char c = e.getKeyChar();
                 // Permitir solo dígitos y borrar el texto inicial si se ingresa un número
-                if (!Character.isDigit(c) || amoundField.getText().equals("Ingrese aqui la cantidad del producto")) {
+                if (!Character.isDigit(c) || minimaField.getText().equals("Ingrese aqui la cantidad minima del producto")) {
                     if (Character.isDigit(c)) {
-                        amoundField.setText("");  // Borrar el texto inicial
+                        minimaField.setText("");  // Borrar el texto inicial
                     } else {
                         e.consume();  // Evitar caracteres no numéricos
                     }
@@ -258,27 +261,90 @@ public class NewProductFrame extends JFrame {
             }
         });
         
-        add(amoundField);
+        add(minimaField);
         
 
-        amoundField.addFocusListener(new FocusAdapter() {
+        minimaField.addFocusListener(new FocusAdapter() {
             public void focusGained(FocusEvent evt) {
-                if (String.valueOf(amoundField.getText()).equals("Ingrese aqui la cantidad del producto")) {
-                    amoundField.setText("");
-                    amoundField.setForeground(Color.BLACK);
+                if (String.valueOf(minimaField.getText()).equals("Ingrese aqui la cantidad minima del producto")) {
+                    minimaField.setText("");
+                    minimaField.setForeground(Color.BLACK);
                 }
             }
 
             public void focusLost(FocusEvent evt) {
-                if (String.valueOf(amoundField.getText()).isEmpty()) {
-                    amoundField.setText("Ingrese aqui la cantidad del producto");
-                    amoundField.setForeground(new Color(160, 160, 160));
+                if (String.valueOf(minimaField.getText()).isEmpty()) {
+                    minimaField.setText("Ingrese aqui la cantidad minima del producto");
+                    minimaField.setForeground(new Color(160, 160, 160));
                 }
             }
         });
 
         // Ejecutar acción de addProductButton al presionar Enter
-        amoundField.addKeyListener(new KeyAdapter() {
+        minimaField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    maximaField.requestFocusInWindow();
+                }
+            }
+        });
+
+        jSeparator4 = new JSeparator();
+        jSeparator4.setPreferredSize(new java.awt.Dimension(600, 10));
+        jSeparator4.setForeground(new Color(206, 206, 206));
+        jSeparator4.setBounds(555, 220, 190, 5);
+        add(jSeparator4);
+
+        maximaLabel = new JLabel("Cantidad maxima:");
+        maximaLabel.setFont(new java.awt.Font("Arial Narrow", 1, 20));
+        maximaLabel.setBounds(765, 160, 190, 30);
+        add(maximaLabel);
+
+        maximaField = new JTextField("Ingrese aqui la cantidad maxima del producto");
+        maximaField.setBounds(765, 190, 190, 30);
+        maximaField.setBorder(null);
+        maximaField.setForeground(new Color(160, 160, 160));
+        maximaField.setBackground(new Color(238, 238, 238));
+        maximaField.setFont(new java.awt.Font("Segoe UI", 0, 14));
+        
+        // Agregar KeyListener para solo permitir números
+        maximaField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                // Permitir solo dígitos y borrar el texto inicial si se ingresa un número
+                if (!Character.isDigit(c) || maximaField.getText().equals("Ingrese aqui la cantidad maxima del producto")) {
+                    if (Character.isDigit(c)) {
+                        maximaField.setText("");  // Borrar el texto inicial
+                    } else {
+                        e.consume();  // Evitar caracteres no numéricos
+                    }
+                }
+            }
+        });
+        
+        add(maximaField);
+        
+
+        maximaField.addFocusListener(new FocusAdapter() {
+            public void focusGained(FocusEvent evt) {
+                if (String.valueOf(maximaField.getText()).equals("Ingrese aqui la cantidad maxima del producto")) {
+                    maximaField.setText("");
+                    maximaField.setForeground(Color.BLACK);
+                }
+            }
+
+            public void focusLost(FocusEvent evt) {
+                if (String.valueOf(maximaField.getText()).isEmpty()) {
+                    maximaField.setText("Ingrese aqui la cantidad maxima del producto");
+                    maximaField.setForeground(new Color(160, 160, 160));
+                }
+            }
+        });
+
+        // Ejecutar acción de addProductButton al presionar Enter
+        maximaField.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
@@ -287,11 +353,11 @@ public class NewProductFrame extends JFrame {
             }
         });
 
-        jSeparator4 = new JSeparator();
-        jSeparator4.setPreferredSize(new java.awt.Dimension(600, 10));
-        jSeparator4.setForeground(new Color(206, 206, 206));
-        jSeparator4.setBounds(555, 220, 400, 5);
-        add(jSeparator4);
+        jSeparator8 = new JSeparator();
+        jSeparator8.setPreferredSize(new java.awt.Dimension(600, 10));
+        jSeparator8.setForeground(new Color(206, 206, 206));
+        jSeparator8.setBounds(765, 220, 190, 5);
+        add(jSeparator8);
 
         priceLabel = new JLabel("Precio del Producto:");
         priceLabel.setFont(new java.awt.Font("Arial Narrow", 1, 20));
@@ -494,7 +560,7 @@ public class NewProductFrame extends JFrame {
         for (Proveedor proveedor : ProveedorRepositorio.obtenerProveedores()) {
             String item = proveedor.getNombre();
             providerComboBox.addItem(item);
-            System.out.println(item);
+            //System.out.println(item);
         }
         add(providerComboBox);
 
@@ -536,7 +602,8 @@ public class NewProductFrame extends JFrame {
                     int idint = Integer.parseInt(idField.getText());
                     String productName = productNameField.getText();
                     int productCategory = obtenerIdCategoriaSeleccionada();
-                    int amoundint = Integer.parseInt(amoundField.getText());
+                    int minimaint = Integer.parseInt(minimaField.getText());
+                    int maxima = Integer.parseInt(maximaField.getText());
                     double price = Double.parseDouble(priceField.getText());
                     int idProveedor = obtenerIdProveedorSeleccionado();
                     
@@ -563,12 +630,12 @@ public class NewProductFrame extends JFrame {
                     ProductoServicio productoServicio = new ProductoServicio();
         
                     if (idProveedor != -1) {
-                        if (productoServicio.validacionInformacion(idint, productName, productCategory, amoundint, price, idProveedor)) {
-                            Producto producto = new Producto(idint, productName, productCategory, amoundint, price, expirationDate, idProveedor);
+                        if (productoServicio.validacionInformacion(idint, productName, productCategory, minimaint, price, idProveedor)) {
+                            Producto producto = new Producto(idint, productName, productCategory,0, minimaint, maxima, price, expirationDate, idProveedor);
                             ProductoRepositorio.crearProducto(producto);
         
                             int idHistorial = HistorialService.loadHistorialId();
-                            Historial historial = new Historial(idHistorial, "Creacion", LocalDate.now(), idint, "Creacion de " + productName, "Productos");
+                            Historial historial = new Historial(idHistorial, userId, "Creacion", LocalDate.now(), idint, "Creacion de " + productName, "Productos");
                             HistorialRepository.crearHistorial(historial);
                             HistorialService.actualizarIds();
 
@@ -602,7 +669,7 @@ public class NewProductFrame extends JFrame {
     // Método para obtener el ID del proveedor seleccionado
     public int obtenerIdProveedorSeleccionado() {
         String nombreSeleccionado = (String) providerComboBox.getSelectedItem();
-        System.out.println(nombreSeleccionado);
+        //System.out.println(nombreSeleccionado);
         Proveedor proveedor = ProveedorRepositorio.obtenerProveedorPorNombre(nombreSeleccionado);
         if (proveedor != null) {
             return proveedor.getId();
@@ -614,7 +681,7 @@ public class NewProductFrame extends JFrame {
     // Método para obtener el ID de la categoría seleccionada
     public int obtenerIdCategoriaSeleccionada() {
         String nombreSeleccionado = (String) productCategoryComboBox.getSelectedItem();
-        System.out.println(nombreSeleccionado);
+        //System.out.println(nombreSeleccionado);
         int idCategoria = CategoryRepository.obtenerIdPorNombre(nombreSeleccionado);
         return idCategoria;
     }

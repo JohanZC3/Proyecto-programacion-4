@@ -24,7 +24,7 @@ public class SerialIdRepository {
         cargarSerialIdsDesdeJSON();
         if (serialIds.isEmpty()) {
             // Agregar datos de prueba
-            crearSerialId(new SerialId(1, 2, 2, 2, 2, 2));
+            crearSerialId(new SerialId(1, 2, 2, 2, 2, 2, 0));
         }
     }
 

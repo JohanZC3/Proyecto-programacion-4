@@ -9,9 +9,11 @@ public class Historial {
     private int idAfectado;
     private String tabla;
     private String razon;
+    private int usuario;
 
-    public Historial(int id, String accion, LocalDate fecha, int idAfectado, String razon, String tabla) {
+    public Historial(int id, int usuario, String accion, LocalDate fecha, int idAfectado, String razon, String tabla) {
         this.id = id;
+        this.usuario = usuario;
         this.accion = accion;
         this.fecha = fecha;
         this.idAfectado = idAfectado;
@@ -65,6 +67,14 @@ public class Historial {
 
     public void setTabla(String tabla) {
         this.tabla = tabla;
+    }
+
+    public int getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(int usuario) {
+        this.usuario = usuario;
     }
     
 }

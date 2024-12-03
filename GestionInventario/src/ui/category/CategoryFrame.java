@@ -30,6 +30,9 @@ import classes.backHistorial.Historial;
 import classes.backHistorial.HistorialRepository;
 import classes.backSerialId.SerialId;
 import classes.backSerialId.SerialIdRepository;
+import classes.backUsuario.Usuario;
+import classes.backUsuario.UsuarioRepositorio;
+import ui.productos.InventaryFrame;
 
 public class CategoryFrame extends JFrame{
     private DefaultTableModel tableModel;
@@ -41,7 +44,7 @@ public class CategoryFrame extends JFrame{
     }
 
     @SuppressWarnings("unused")
-    public void ShowUpCategoryFrame() {
+    public void ShowUpCategoryFrame(int userId) {
         setTitle("categorias");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(1000, 400);
@@ -95,8 +98,8 @@ public class CategoryFrame extends JFrame{
 
         // Configuración de la columna de acciones con botones
         TableColumn actionColumn = table.getColumnModel().getColumn(columnNames.length - 1);
-        actionColumn.setCellRenderer(new ButtonRenderer());
-        actionColumn.setCellEditor(new ButtonEditor(new JCheckBox(), tableModel, table));
+        actionColumn.setCellRenderer(new ButtonRenderer(userId));
+        actionColumn.setCellEditor(new ButtonEditor(new JCheckBox(), tableModel, table, userId));
 
         JScrollPane scrollPane = new JScrollPane(table);
 
@@ -107,13 +110,9 @@ public class CategoryFrame extends JFrame{
         add(panelConMargen, BorderLayout.CENTER);
 
         // Listeners para botones
-        homeButton.addActionListener(e -> dispose());
+        homeButton.addActionListener(e ->{ new InventaryFrame().ShowUpInventaryFrame(userId);dispose();});
 
-        addButton.addActionListener(e -> {
-            NewCategoryFrame newCategoryFrame = new NewCategoryFrame();
-            newCategoryFrame.setVisible(true);
-            dispose();
-        });
+        addButton.addActionListener(e -> { new NewCategoryFrame().setVisible(true);dispose();});
 
         setVisible(true);
     }
@@ -121,13 +120,15 @@ public class CategoryFrame extends JFrame{
     private void actualizarTabla(List<Category> categories) {
         tableModel.setRowCount(0); // Limpiar la tabla
         for ( Category category : categories) {
-            Object[] rowData = {
-                category.getId(),
-                category.getNombre(),
-                category.getDescripcion(),
-                "Acciones"
-            };
-            tableModel.addRow(rowData);
+            if (category.getId() != 0){
+                Object[] rowData = {
+                    category.getId(),
+                    category.getNombre(),
+                    category.getDescripcion(),
+                    "Acciones"
+                };
+                tableModel.addRow(rowData);
+            }
         }
     }
 
@@ -136,7 +137,7 @@ public class CategoryFrame extends JFrame{
         private final JButton editButton;
         private final JButton deleteButton;
 
-        public ButtonRenderer() {
+        public ButtonRenderer(int userId) {
             setLayout(new FlowLayout(FlowLayout.CENTER));
             editButton = new JButton("Modificar");
             editButton.setBackground(new Color(17, 59, 75));
@@ -148,8 +149,13 @@ public class CategoryFrame extends JFrame{
             deleteButton.setForeground(new Color(228, 202, 151));
             deleteButton.setFocusPainted(false);
 
-            add(editButton);
-            add(deleteButton);
+            Usuario usuario = UsuarioRepositorio.obtenerUsuarioPorId(userId);
+
+            if (usuario.getTipoUsuario().equals("administrador"))
+            {
+                add(editButton);
+                add(deleteButton);
+            }
         }
 
         @Override
@@ -165,7 +171,7 @@ public class CategoryFrame extends JFrame{
         private final JButton deleteButton;
 
         @SuppressWarnings("unused")
-        public ButtonEditor(JCheckBox checkBox, DefaultTableModel tableModel, JTable table) {
+        public ButtonEditor(JCheckBox checkBox, DefaultTableModel tableModel, JTable table, int userId) {
             super(checkBox);
             panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
@@ -179,14 +185,19 @@ public class CategoryFrame extends JFrame{
             deleteButton.setForeground(new Color(228, 202, 151));
             deleteButton.setFocusPainted(false);
 
-            panel.add(editButton);
-            panel.add(deleteButton);
+            Usuario usuario = UsuarioRepositorio.obtenerUsuarioPorId(userId);
+
+            if (usuario.getTipoUsuario().equals("administrador"))
+            {
+                panel.add(editButton);
+                panel.add(deleteButton);
+            }
 
             editButton.addActionListener(e -> {
                 int row = table.getSelectedRow();
                 if (row >= 0) {
                     int id = (int) tableModel.getValueAt(row, 0);
-                    UpdateCategoryFrame updateCategoryFrame = new UpdateCategoryFrame(id);
+                    UpdateCategoryFrame updateCategoryFrame = new UpdateCategoryFrame(id,userId);
                     updateCategoryFrame.setVisible(true);
                     dispose();
                 }
@@ -200,11 +211,11 @@ public class CategoryFrame extends JFrame{
                             JOptionPane.YES_NO_OPTION);
                     if (confirm == JOptionPane.YES_OPTION) {
                         int id = (int) tableModel.getValueAt(row, 0);
-                        CategoryService.categoryChange(id);
+                        CategoryService.categoryChange(id, userId);
                         CategoryRepository.eliminarCategory(id);
                         actualizarTabla(CategoryRepository.obtenerCategories());
                         int historialId = loadHistorialId();
-                        Historial historial = new Historial(historialId, "Eliminacion", LocalDate.now(), id, "Eliminacion de categoria "+tableModel.getValueAt(row, 1), "Categorias");
+                        Historial historial = new Historial(historialId, userId,"Eliminacion", LocalDate.now(), id, "Eliminacion de categoria "+tableModel.getValueAt(row, 1), "Categorias");
                         HistorialRepository.crearHistorial(historial);
                         tableModel.removeRow(row);
                     }

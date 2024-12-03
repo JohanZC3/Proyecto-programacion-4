@@ -27,8 +27,8 @@ public class HistorialRepository {
         cargarHistorialesDesdeJSON();
         if (historiales.isEmpty()) {
             // Agregar datos de prueba
-            crearHistorial(new Historial(1, "Creacion", LocalDate.now(), 1, "Creación de producto 1", "Productos"));
-            crearHistorial(new Historial(2, "Creacion", LocalDate.now(), 2, "Creacion de producto 2", "Productos"));
+            crearHistorial(new Historial(1,0, "Creacion", LocalDate.now(), 1, "Creación de producto 1", "Productos"));
+            crearHistorial(new Historial(2,0, "Creacion", LocalDate.now(), 2, "Creacion de producto 2", "Productos"));
         }
     }
 
@@ -54,6 +54,7 @@ public class HistorialRepository {
         for (Historial historial : historiales) {
             if (historial.getId() == id) {
                 historial.setAccion(historialModificado.getAccion());
+                historial.setUsuario(historialModificado.getUsuario());
                 historial.setFecha(historialModificado.getFecha());
                 historial.setIdAfectado(historialModificado.getIdAfectado());
                 historial.setRazon(historialModificado.getRazon());

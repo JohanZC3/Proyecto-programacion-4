@@ -13,6 +13,8 @@ import classes.backHistorial.HistorialRepository;
 import classes.backHistorial.HistorialService;
 import classes.backProveedor.Proveedor;
 import classes.backProveedor.ProveedorRepositorio;
+import classes.backUsuario.Usuario;
+import classes.backUsuario.UsuarioRepositorio;
 
 import java.util.List;
 
@@ -27,7 +29,7 @@ public class ProvidersFrame extends JFrame {
     }
 
     @SuppressWarnings("unused")
-    public void mostrarProveedores() {
+    public void mostrarProveedores(int userId) {
         setTitle("Proveedores Actuales");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(1000, 400);
@@ -82,8 +84,8 @@ public class ProvidersFrame extends JFrame {
 
         // Configuración de la columna de acciones con botones
         TableColumn actionColumn = table.getColumnModel().getColumn(columnNames.length - 1);
-        actionColumn.setCellRenderer(new ButtonRenderer());
-        actionColumn.setCellEditor(new ButtonEditor(new JCheckBox(), tableModel, table));
+        actionColumn.setCellRenderer(new ButtonRenderer(userId));
+        actionColumn.setCellEditor(new ButtonEditor(new JCheckBox(), tableModel, table,userId));
 
         JScrollPane scrollPane = new JScrollPane(table);
 
@@ -97,7 +99,7 @@ public class ProvidersFrame extends JFrame {
         // Acción de los botones superiores
         homeButton.addActionListener(e -> dispose());
         addButton.addActionListener(e -> {
-            NewProviderFrame newProviderFrame = new NewProviderFrame();
+            NewProviderFrame newProviderFrame = new NewProviderFrame(userId);
             newProviderFrame.setVisible(true);
             dispose();
         });
@@ -110,7 +112,7 @@ public class ProvidersFrame extends JFrame {
         private final JButton editButton;
         private final JButton deleteButton;
 
-        public ButtonRenderer() {
+        public ButtonRenderer(int userId) {
             setLayout(new FlowLayout(FlowLayout.CENTER));
             editButton = new JButton("Modificar");
             editButton.setBackground(new Color(17, 59, 75));
@@ -122,8 +124,13 @@ public class ProvidersFrame extends JFrame {
             deleteButton.setForeground(new Color(228, 202, 151));
             deleteButton.setFocusPainted(false);
 
-            add(editButton);
-            add(deleteButton);
+            Usuario usuario = UsuarioRepositorio.obtenerUsuarioPorId(userId);
+
+            if (usuario.getTipoUsuario().equals("administrador"))
+            {
+                add(editButton);
+                add(deleteButton);
+            }
         }
 
         @Override
@@ -139,9 +146,10 @@ public class ProvidersFrame extends JFrame {
         private final JButton deleteButton;
 
         @SuppressWarnings("unused")
-        public ButtonEditor(JCheckBox checkBox, DefaultTableModel tableModel, JTable table) {
+        public ButtonEditor(JCheckBox checkBox, DefaultTableModel tableModel, JTable table, int userId) {
             super(checkBox);
             panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+
 
             editButton = new JButton("Modificar");
             editButton.setBackground(new Color(17, 59, 75));
@@ -152,15 +160,20 @@ public class ProvidersFrame extends JFrame {
             deleteButton.setBackground(new Color(17, 59, 75));
             deleteButton.setForeground(new Color(228, 202, 151));
             deleteButton.setFocusPainted(false);
+            
+            Usuario usuario = UsuarioRepositorio.obtenerUsuarioPorId(userId);
 
-            panel.add(editButton);
-            panel.add(deleteButton);
+            if (usuario.getTipoUsuario().equals("administrador"))
+            {
+                panel.add(editButton);
+                panel.add(deleteButton);
+            }
 
             editButton.addActionListener(e -> {
                 int row = table.getSelectedRow();
                 if (row >= 0) {
                     int id = (int) tableModel.getValueAt(row, 0);
-                    ProvidersUpdateFrame providersUpdateFrame = new ProvidersUpdateFrame(id);
+                    ProvidersUpdateFrame providersUpdateFrame = new ProvidersUpdateFrame(id,userId);
                     providersUpdateFrame.setVisible(true);
                     dispose();
                 }
@@ -174,10 +187,10 @@ public class ProvidersFrame extends JFrame {
                             JOptionPane.YES_NO_OPTION);
                     if (confirm == JOptionPane.YES_OPTION) {
                         int id = (int) tableModel.getValueAt(row, 0);
-                        System.out.println(id);
+                        //System.out.println(id);
                         ProveedorRepositorio.eliminarProveedor(id);
                         int historialId = HistorialService.loadHistorialId();
-                        Historial historial = new Historial(historialId, "Eliminacion", LocalDate.now(), id, "Eliminacion de producto "+tableModel.getValueAt(row, 1), "Proveedor");
+                        Historial historial = new Historial(historialId, userId,"Eliminacion", LocalDate.now(), id, "Eliminacion de producto "+tableModel.getValueAt(row, 1), "Proveedor");
                         HistorialRepository.crearHistorial(historial);
                         actualizarTabla(ProveedorRepositorio.obtenerProveedores());
                         HistorialService.actualizarIds();

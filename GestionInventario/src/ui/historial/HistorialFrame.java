@@ -7,6 +7,7 @@ import java.util.List;
 
 import classes.backHistorial.Historial;
 import classes.backHistorial.HistorialRepository;
+import classes.backUsuario.UsuarioRepositorio;
 
 public class HistorialFrame extends JFrame{
     private DefaultTableModel tableModel;
@@ -41,7 +42,7 @@ public class HistorialFrame extends JFrame{
 
         homeButton.addActionListener(e -> dispose());
 
-        String[] columnNames = { "ID", "Accion", "fecha", "id afectado", "Tabla" ,"Razon"};
+        String[] columnNames = { "ID", "Accion", "fecha", "id afectado", "Tabla" ,"Razon","realizado por"};
         tableModel = new DefaultTableModel(columnNames, 0);
         actualizarTabla(HistorialRepository.obtenerHistoriales());
 
@@ -79,7 +80,8 @@ public class HistorialFrame extends JFrame{
                 historial.getFecha(),
                 historial.getIdAfectado(),
                 historial.getTabla(),
-                historial.getRazon()
+                historial.getRazon(),
+                UsuarioRepositorio.obtenerUsuarioPorId(historial.getUsuario()).getNombreCompleto()
             };
             tableModel.addRow(rowData);
         }

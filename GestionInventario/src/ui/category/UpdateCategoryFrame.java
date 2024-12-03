@@ -49,7 +49,7 @@ public class UpdateCategoryFrame extends JFrame {
     }
 
 
-    public UpdateCategoryFrame(int categoryId) {
+    public UpdateCategoryFrame(int categoryId, int userId) {
 
         setTitle("modificar Categoria");
         setSize(1000, 400);
@@ -239,7 +239,7 @@ public class UpdateCategoryFrame extends JFrame {
                 }
                 CategoryRepository.modificarCategory(categoryId, new Category(categoryId, nombre, descripcion));
 
-                HistorialModal historialModal = new HistorialModal(categoryId, "Modificacion", "Categoria");
+                HistorialModal historialModal = new HistorialModal(categoryId, "Modificacion", "Categoria", userId);
                 historialModal.setVisible(true);
                 dispose();
             }

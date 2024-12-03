@@ -49,6 +49,10 @@ public class Usuario {
         this.apellido = apellido;
     }
 
+    public String getNombreCompleto() {
+        return nombre + " " + apellido;
+    }
+
     public String getTipoDocumento() {
         return tipoDocumento;
     }

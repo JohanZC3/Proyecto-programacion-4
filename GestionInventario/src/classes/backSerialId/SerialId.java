@@ -7,14 +7,16 @@ public class SerialId {
     private int lastidProveedor;
     private int lastidHistorial;
     private int lastidCategory;
+    private int lastidCaja;
 
-    public SerialId(int id, int lastidUsuario, int lastidProducto, int lastidProveedor, int lastidHistorial, int lastidCategory) {
+    public SerialId(int id, int lastidUsuario, int lastidProducto, int lastidProveedor, int lastidHistorial, int lastidCategory, int lastidCaja) {
         this.lastidUsuario = lastidUsuario;
         this.lastidProducto = lastidProducto;
         this.lastidProveedor = lastidProveedor;
         this.lastidHistorial = lastidHistorial;
         this.lastidCategory = lastidCategory;
         this.id = id;
+        this.lastidCaja = lastidCaja;
     }
 
     
@@ -69,5 +71,14 @@ public class SerialId {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+
+    public int getLastidCaja() {
+        return lastidCaja;
+    }
+
+    public void setLastidCaja(int lastidCaja) {
+        this.lastidCaja = lastidCaja;
     }
 }

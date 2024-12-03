@@ -37,7 +37,7 @@ public class ProvidersUpdateFrame extends JFrame {
         return retValue;
     }
 
-    public ProvidersUpdateFrame(int providerId) {
+    public ProvidersUpdateFrame(int providerId, int userId) {
         setTitle("Modificar Proveedor");
         setSize(1000, 350);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -188,7 +188,7 @@ public class ProvidersUpdateFrame extends JFrame {
 
                 if (ProveedorServicio.validarInformacion(providerId, providerName, providerAdress, phoneString)) {
                     ProveedorRepositorio.modificarProveedor(providerId, new Proveedor(providerId, providerName, providerAdress, phoneString));
-                    HistorialModal historialModal = new HistorialModal(providerId, "Modificacion", "proveedor");
+                    HistorialModal historialModal = new HistorialModal(providerId, "Modificacion", "proveedor",userId);
                     historialModal.setVisible(true);
                     dispose();
                 } else {

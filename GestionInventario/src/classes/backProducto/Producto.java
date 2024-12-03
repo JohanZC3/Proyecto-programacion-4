@@ -8,11 +8,13 @@ public class Producto {
     private String nombre;
     private int categoria;
     private int cantidad;
+    private int minima;
+    private int maxima;
     private double precioUnitario;
     private LocalDate fechaExpiracion;
     private int proveedorId;  // Agregado para vinculación con proveedor
 
-    public Producto(int id, String nombre, int categoria, int cantidad, double precioUnitario, LocalDate fechaExpiracion, int proveedorId) {
+    public Producto(int id, String nombre, int categoria, int cantidad, int minima, int maxima, double precioUnitario, LocalDate fechaExpiracion, int proveedorId) {
         this.id = id;
         this.nombre = nombre;
         this.categoria = categoria;
@@ -20,6 +22,8 @@ public class Producto {
         this.precioUnitario = precioUnitario;
         this.fechaExpiracion = fechaExpiracion;
         this.proveedorId = proveedorId; // Inicialización del proveedor
+        this.minima = minima;
+        this.maxima = maxima;
     }
 
     // Getters y Setters
@@ -78,5 +82,21 @@ public class Producto {
 
     public void setProveedorId(int proveedorId) {
         this.proveedorId = proveedorId;  // Setter para el proveedor
+    }
+
+    public int getMinima() {
+        return minima;
+    }
+
+    public void setMinima(int minima) {
+        this.minima = minima;
+    }
+
+    public int getMaxima() {
+        return maxima;
+    }
+
+    public void setMaxima(int maxima) {
+        this.maxima = maxima;
     }
 }

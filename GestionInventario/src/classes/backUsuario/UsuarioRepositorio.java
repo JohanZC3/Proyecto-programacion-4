@@ -22,6 +22,7 @@ public class UsuarioRepositorio {
         cargarUsuariosDesdeJSON();
         if (usuarios.isEmpty()) {
             // Agregar datos de prueba
+            crearUsuario(new Usuario(0, "sistema", "automatico", "CC", "00000", "sistema@app.com", "0000000000", true, "administrador", "pAdmin123"));
             crearUsuario(new Usuario(1, "Juan", "Perez", "CC", "12345", "juan@example.com", "3118776765", true, "administrador" ,"pJuan123"));
             crearUsuario(new Usuario(2, "Maria", "Lopez", "CC", "67890", "maria@example.com", "3213322232", true, "auxiliar","pMaria456"));
         }
@@ -53,6 +54,15 @@ public class UsuarioRepositorio {
     public static Usuario obtenerUsuarioPorEmail(String email) {
         for (Usuario usuario : usuarios) {
             if (usuario.getDireccion().equals(email)) {
+                return usuario;
+            }
+        }
+        return null;
+    }
+
+    public static Usuario obtenerUsuarioPorId(int id) {
+        for (Usuario usuario : usuarios) {
+            if (usuario.getId() == id) {
                 return usuario;
             }
         }

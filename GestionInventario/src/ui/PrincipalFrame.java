@@ -4,6 +4,7 @@ import javax.swing.*;
 
 import classes.backUsuario.Usuario;
 import classes.backUsuario.UsuarioRepositorio;
+import ui.caja.CajaFrame;
 import ui.historial.HistorialFrame;
 import ui.productos.InventaryFrame;
 
@@ -50,7 +51,7 @@ public class PrincipalFrame extends JFrame {
 
         // Botón para mostrar inventario
         JButton inventarioButton = new JButton("Mostrar Inventario");
-        inventarioButton.setBounds(50, 80, 300, 50);
+        inventarioButton.setBounds(50, 150, 300, 50);
         inventarioButton.setBackground(new Color(17, 59, 75));
         inventarioButton.setForeground(new Color(228, 202, 151));
         inventarioButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -58,6 +59,15 @@ public class PrincipalFrame extends JFrame {
         inventarioButton.setFocusable(false);  // Evitar enfoque inicial
         add(inventarioButton);
 
+        //Boton para caja
+        JButton CajaButton = new JButton("Caja");
+        CajaButton.setBounds(50, 80, 300, 50);
+        CajaButton.setBackground(new Color(17, 59, 75));
+        CajaButton.setForeground(new Color(228, 202, 151));
+        CajaButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        CajaButton.setFont(new java.awt.Font("Arial Narrow", 1, 22));
+        CajaButton.setFocusable(false);  // Evitar enfoque inicial
+        add(CajaButton);
 
         // Botón para ver Historial de Acciones
         JButton HistorialButton = new JButton("Mostrar Historial");
@@ -79,13 +89,13 @@ public class PrincipalFrame extends JFrame {
         logoutButton.setFocusable(false);  // Evitar enfoque inicial
         add(logoutButton);
 
+        int userId = usuario.getId();
+
         // Agregar acción para cada botón
-        inventarioButton.addActionListener(e -> new InventaryFrame().ShowUpInventaryFrame());
+        inventarioButton.addActionListener(e -> new InventaryFrame().ShowUpInventaryFrame(userId));
+        CajaButton.addActionListener(e -> new CajaFrame().mostrarCajaFrame(userId));
         HistorialButton.addActionListener(e -> new HistorialFrame().mostrarHistorialFrame());
-        logoutButton.addActionListener(e -> {
-            new LoginFrame().setVisible(true);
-            dispose();
-        });
+        logoutButton.addActionListener(e -> { new LoginFrame().setVisible(true);dispose();});
 
         // Configurar Enter como "clic" en el botón cuando esté enfocado
         Action action = new AbstractAction() {
@@ -103,6 +113,14 @@ public class PrincipalFrame extends JFrame {
 
         logoutButton.getInputMap(JComponent.WHEN_FOCUSED).put(enterKey, "click");
         logoutButton.getActionMap().put("click", action);
+
+        HistorialButton.getInputMap(JComponent.WHEN_FOCUSED).put(enterKey, "click");
+        HistorialButton.getActionMap().put("click", action);
+
+        CajaButton.getInputMap(JComponent.WHEN_FOCUSED).put(enterKey, "click");
+        CajaButton.getActionMap().put("click", action);
+
+
 
         // Listener para activar el ciclo de Tab cuando se presiona por primera vez
         addWindowFocusListener(new WindowAdapter() {

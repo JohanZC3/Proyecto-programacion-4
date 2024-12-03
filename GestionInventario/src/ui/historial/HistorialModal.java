@@ -34,7 +34,7 @@ public class HistorialModal extends JFrame{
         return retValue;
     }
 
-    public HistorialModal(int idCambio, String accion, String tabla) {
+    public HistorialModal(int idCambio, String accion, String tabla, int userId) {
         setTitle("Historial de Inventario");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(500, 180);
@@ -119,8 +119,8 @@ public class HistorialModal extends JFrame{
                 motivo = (!motivo.equals("Ingrese el motivo de la modificación")) ? motivo : "Sin motivo";
                 // Guardar en la base de datos
                 int idHistorial = HistorialService.loadHistorialId();
-                System.out.println("ID Historial: " + idHistorial + ", Accion: " + accion + ", Fecha: " + LocalDate.now() + ", ID Producto: " + idCambio + ", Motivo: " + motivo);
-                Historial historial = new Historial(idHistorial, accion, LocalDate.now(), idCambio, motivo, tabla);
+                //System.out.println("ID Historial: " + idHistorial + ", Accion: " + accion + ", Fecha: " + LocalDate.now() + ", ID Producto: " + idCambio + ", Motivo: " + motivo);
+                Historial historial = new Historial(idHistorial, userId, accion, LocalDate.now(), idCambio, motivo, tabla);
                 HistorialRepository.crearHistorial(historial);
                 HistorialService.actualizarIds();
                 JOptionPane.showMessageDialog(null, "Modificado exitosamente", "Modificado", JOptionPane.INFORMATION_MESSAGE);

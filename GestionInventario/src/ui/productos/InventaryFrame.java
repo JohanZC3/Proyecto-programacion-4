@@ -9,6 +9,11 @@ import classes.backHistorial.HistorialService;
 import classes.backProducto.Producto;
 import classes.backProducto.ProductoRepositorio;
 import classes.backProveedor.ProveedorRepositorio;
+import classes.backUsuario.Usuario;
+import classes.backUsuario.UsuarioRepositorio;
+import classes.caja.Caja;
+import classes.caja.CajaRepositorio;
+import classes.caja.CajaService;
 import ui.category.CategoryFrame;
 import ui.proveedores.ProvidersFrame;
 
@@ -16,12 +21,15 @@ import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class InventaryFrame extends JFrame {
 
     private JTextField searchField;
     private DefaultTableModel tableModel;
+    private List<Producto> productosPorDebajoDelLimite = new ArrayList<>();
+    private List<Caja> pedidosPorAprobar = new ArrayList<>();
 
     @Override
     public Image getIconImage() {
@@ -30,7 +38,7 @@ public class InventaryFrame extends JFrame {
     }
 
     @SuppressWarnings("unused")
-    public void ShowUpInventaryFrame() {
+    public void ShowUpInventaryFrame(int userId) {
         setTitle("Inventario Actual");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(1000, 400);
@@ -44,6 +52,8 @@ public class InventaryFrame extends JFrame {
         topPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         JPanel searchPanel = new JPanel();
         topPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        JPanel tablePanel = new JPanel();
+        tablePanel.setLayout(new FlowLayout(FlowLayout.CENTER));
 
         searchField = new JTextField(20);
         searchField.setFont(new Font("Arial Narrow", Font.PLAIN, 18));
@@ -72,7 +82,7 @@ public class InventaryFrame extends JFrame {
         CategoryButton.setFocusPainted(false);
         CategoryButton.setFont(new Font("Arial Narrow", Font.BOLD, 22));
 
-        JButton proveedoresButton = new JButton("Mostrar Proveedores");
+        JButton proveedoresButton = new JButton("Proveedores");
         proveedoresButton.setBounds(50, 150, 300, 50);
         proveedoresButton.setBackground(new Color(255,255,255));
         proveedoresButton.setForeground(new Color(0,0,0));
@@ -88,8 +98,8 @@ public class InventaryFrame extends JFrame {
         searchPanel.add(searchButton);
         topPanel.add(homeButton);
         topPanel.add(addButton);
-        topPanel.add(proveedoresButton);
-        topPanel.add(CategoryButton);
+        tablePanel.add(proveedoresButton);
+        tablePanel.add(CategoryButton);
         mainPanel.add(topPanel);
         mainPanel.add(searchPanel);
 
@@ -113,6 +123,8 @@ public class InventaryFrame extends JFrame {
             }
         };
         actualizarTabla(ProductoRepositorio.obtenerProductos()); // Carga inicial de productos
+        verificarProductosPorDebajoDelLimite();
+        verificarPedidos();
 
         JTable table = new JTable(tableModel);
         table.setRowHeight(70);
@@ -129,8 +141,8 @@ public class InventaryFrame extends JFrame {
 
         // Configuración de la columna de acciones con botones
         TableColumn actionColumn = table.getColumnModel().getColumn(columnNames.length - 1);
-        actionColumn.setCellRenderer(new ButtonRenderer());
-        actionColumn.setCellEditor(new ButtonEditor(new JCheckBox(), tableModel, table));
+        actionColumn.setCellRenderer(new ButtonRenderer(userId));
+        actionColumn.setCellEditor(new ButtonEditor(new JCheckBox(), tableModel, table, userId));
 
         JScrollPane scrollPane = new JScrollPane(table);
 
@@ -139,22 +151,75 @@ public class InventaryFrame extends JFrame {
         panelConMargen.add(scrollPane, BorderLayout.CENTER);
 
         mainPanel.add(scrollPane);
+        mainPanel.add(tablePanel);
         add(mainPanel, BorderLayout.CENTER);
 
 
         // Listeners para botones
         homeButton.addActionListener(e -> dispose());
-        proveedoresButton.addActionListener(e -> new ProvidersFrame().mostrarProveedores());
-        CategoryButton.addActionListener(e -> new CategoryFrame().ShowUpCategoryFrame());
+        proveedoresButton.addActionListener(e -> new ProvidersFrame().mostrarProveedores(userId));
+        CategoryButton.addActionListener(e -> {new CategoryFrame().ShowUpCategoryFrame(userId);
+        dispose();});
 
         addButton.addActionListener(e -> {
-            NewProductFrame newProductFrame = new NewProductFrame();
+            NewProductFrame newProductFrame = new NewProductFrame(userId);
             newProductFrame.setVisible(true);
             dispose();
         });
 
         // Listener de búsqueda
         searchButton.addActionListener(e -> buscarProducto());
+        Usuario usuario = UsuarioRepositorio.obtenerUsuarioPorId(userId);
+        String tipoUsuario = usuario.getTipoUsuario();
+
+        if (!pedidosPorAprobar.isEmpty() && tipoUsuario.equals("administrador")) {
+            for (Caja pedido : pedidosPorAprobar) {
+                int confirm = JOptionPane.showConfirmDialog(null,
+                        "Hay un pedido pendiente de " + pedido.getCantidad() + " unidades del producto " + ProductoRepositorio.obtenerProductoPorId(pedido.getProducto()).getNombre() + ". ¿Deseas aprobarlo?",
+                        "Confirmar pedido",
+                        JOptionPane.YES_NO_OPTION);
+                if (confirm == JOptionPane.YES_OPTION) {
+                    Producto producto = ProductoRepositorio.obtenerProductoPorId(pedido.getProducto());
+                    producto.setCantidad(producto.getMaxima());
+                    ProductoRepositorio.guardarProductosEnJSON();
+                    pedido.setEstado("aprobado");
+                    CajaRepositorio.guardarpedidosEnJSON();
+                    int historialId = HistorialService.loadHistorialId();
+                    Historial historial = new Historial(historialId, userId, "aprobacion", LocalDate.now(), pedido.getProducto(), "aprobacion de pedido de " + pedido.getCantidad() + " unidades del producto " + producto.getNombre(), "Productos");
+                    HistorialRepository.crearHistorial(historial);
+                    HistorialService.actualizarIds();
+                    productosPorDebajoDelLimite.remove(producto);
+                    actualizarTabla(ProductoRepositorio.obtenerProductos());
+                }
+            }
+        }
+
+        if (!productosPorDebajoDelLimite.isEmpty()) {
+            for (Producto producto : productosPorDebajoDelLimite) {
+                int cantidadFaltante = producto.getMaxima() - producto.getCantidad();
+                int confirm = JOptionPane.showConfirmDialog(null,
+                        "El producto " + producto.getNombre() + " está por debajo del límite. ¿Deseas hacer un pedido de " + cantidadFaltante + " unidades?",
+                        "Confirmar pedido",
+                        JOptionPane.YES_NO_OPTION);
+                if (confirm == JOptionPane.YES_OPTION) {                    
+                    int historialId = HistorialService.loadHistorialId();
+                    Historial historial;
+                    if (tipoUsuario.equals("administrador")) {
+                        producto.setCantidad(producto.getMaxima());
+                        historial = new Historial(historialId, userId, "compra", LocalDate.now(), producto.getId(), "compra de " + cantidadFaltante + " unidades del producto " + producto.getNombre(), "Productos");
+                        ProductoRepositorio.guardarProductosEnJSON();
+                    } else {
+                        int cajaId = CajaService.loadCajaId();
+                        CajaRepositorio.crearPedido(new Caja(cajaId, "solicitud de compra de " + cantidadFaltante + " unidades del producto " + producto.getNombre(), producto.getId(), cantidadFaltante,"pendiente" ));
+                        CajaService.actualizarIds();
+                        historial = new Historial(historialId, userId, "pedido", LocalDate.now(), producto.getId(), "solicitud compra de " + cantidadFaltante + " unidades del producto " + producto.getNombre(), "Productos");
+                    }
+                    HistorialRepository.crearHistorial(historial);
+                    HistorialService.actualizarIds();
+                    actualizarTabla(ProductoRepositorio.obtenerProductos());
+                }
+            }
+        }
 
         setVisible(true);
     }
@@ -187,7 +252,7 @@ public class InventaryFrame extends JFrame {
         private final JButton editButton;
         private final JButton deleteButton;
 
-        public ButtonRenderer() {
+        public ButtonRenderer(int userId) {
             setLayout(new FlowLayout(FlowLayout.CENTER));
             editButton = new JButton("Modificar");
             editButton.setBackground(new Color(17, 59, 75));
@@ -199,8 +264,13 @@ public class InventaryFrame extends JFrame {
             deleteButton.setForeground(new Color(228, 202, 151));
             deleteButton.setFocusPainted(false);
 
-            add(editButton);
-            add(deleteButton);
+            Usuario usuario = UsuarioRepositorio.obtenerUsuarioPorId(userId);
+
+            if (usuario.getTipoUsuario().equals("administrador"))
+            {
+                add(editButton);
+                add(deleteButton);
+            }
         }
 
         @Override
@@ -216,7 +286,7 @@ public class InventaryFrame extends JFrame {
         private final JButton deleteButton;
 
         @SuppressWarnings("unused")
-        public ButtonEditor(JCheckBox checkBox, DefaultTableModel tableModel, JTable table) {
+        public ButtonEditor(JCheckBox checkBox, DefaultTableModel tableModel, JTable table, int userId) {
             super(checkBox);
             panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
@@ -230,14 +300,19 @@ public class InventaryFrame extends JFrame {
             deleteButton.setForeground(new Color(228, 202, 151));
             deleteButton.setFocusPainted(false);
 
-            panel.add(editButton);
-            panel.add(deleteButton);
+            Usuario usuario = UsuarioRepositorio.obtenerUsuarioPorId(userId);
+
+            if (usuario.getTipoUsuario().equals("administrador"))
+            {
+                panel.add(editButton);
+                panel.add(deleteButton);
+            }
 
             editButton.addActionListener(e -> {
                 int row = table.getSelectedRow();
                 if (row >= 0) {
                     int id = (int) tableModel.getValueAt(row, 0);
-                    ProductUpdateFrame productUpdateFrame = new ProductUpdateFrame(id);
+                    ProductUpdateFrame productUpdateFrame = new ProductUpdateFrame(id, userId);
                     productUpdateFrame.setVisible(true);
                     dispose();
                 }
@@ -253,7 +328,7 @@ public class InventaryFrame extends JFrame {
                         int id = (int) tableModel.getValueAt(row, 0);
                         ProductoRepositorio.eliminarProducto(id);
                         int historialId = HistorialService.loadHistorialId();
-                        Historial historial = new Historial(historialId, "Eliminacion", LocalDate.now(), id, "Eliminacion de producto "+tableModel.getValueAt(row, 1), "Productos");
+                        Historial historial = new Historial(historialId, userId, "Eliminacion", LocalDate.now(), id, "Eliminacion de producto "+tableModel.getValueAt(row, 1), "Productos");
                         HistorialRepository.crearHistorial(historial);
                         actualizarTabla(ProductoRepositorio.obtenerProductos());
                         HistorialService.actualizarIds();
@@ -270,6 +345,25 @@ public class InventaryFrame extends JFrame {
         @Override
         public Object getCellEditorValue() {
             return "";
+        }
+    }
+
+
+    private void verificarProductosPorDebajoDelLimite() {
+        List<Producto> productos = ProductoRepositorio.obtenerProductos();
+        for (Producto producto : productos) {
+            if (producto.getCantidad() < producto.getMinima()) {
+                productosPorDebajoDelLimite.add(producto);
+            }
+        }
+    }
+
+    private void verificarPedidos(){
+        List<Caja> pedidos = CajaRepositorio.obtenerPedidos();
+        for (Caja pedido : pedidos) {
+            if (pedido.getEstado().equals("pendiente")) {
+                pedidosPorAprobar.add(pedido);
+            }
         }
     }
 

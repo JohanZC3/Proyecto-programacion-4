@@ -2,6 +2,9 @@ package classes.backProducto;
 
 import classes.LocalDateAdapter;
 import classes.backCategoria.CategoryRepository;
+import classes.backHistorial.Historial;
+import classes.backHistorial.HistorialRepository;
+import classes.backHistorial.HistorialService;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -29,8 +32,8 @@ public class ProductoRepositorio {
         cargarProductosDesdeJSON();
         if (productos.isEmpty()) {
             // Agregar datos de prueba
-            crearProducto(new Producto(1, "Producto 1", 1, 10, 100.0, LocalDate.of(2024, 12, 31),1));
-            crearProducto(new Producto(2, "Producto 2", 2, 20, 150.0, LocalDate.of(2024, 12, 31),2));
+            crearProducto(new Producto(1, "Producto 1", 1, 10, 5, 50, 100.0, LocalDate.of(2024, 12, 31),1));
+            crearProducto(new Producto(2, "Producto 2", 2, 20, 10, 100, 150.0, LocalDate.of(2024, 12, 31),2));
         }
     }
 
@@ -46,6 +49,15 @@ public class ProductoRepositorio {
     public static Producto obtenerProductoPorId(int id) {
         for (Producto producto : productos) {
             if (producto.getId() == id) {
+                return producto;
+            }
+        }
+        return null;
+    }
+
+    public static Producto obtenerProductoPorNombre(String nombre) {
+        for (Producto producto : productos) {
+            if (producto.getNombre().equalsIgnoreCase(nombre)) {
                 return producto;
             }
         }
@@ -70,6 +82,7 @@ public class ProductoRepositorio {
             producto.setPrecioUnitario(productoModificado.getPrecioUnitario());
             producto.setFechaExpiracion(productoModificado.getFechaExpiracion());
             producto.setProveedorId(productoModificado.getProveedorId());
+            producto.setMinima(productoModificado.getMinima());
             guardarProductosEnJSON();
             break;
         }
@@ -139,5 +152,43 @@ public class ProductoRepositorio {
         }
         return productosFiltrados;
         }
+
+    public static void actualizarVentaCantidadProducto(int id, int cantidad, int userId) {
+        for (Producto producto : productos) {
+            if (producto.getId() == id) {
+                if (producto.getCantidad() < cantidad) {
+                    System.out.println("No hay suficiente cantidad de " + producto.getNombre());
+                    return;
+                }else{
+                    producto.setCantidad(producto.getCantidad() - cantidad);
+                    guardarProductosEnJSON();
+                    int idHistorial = HistorialService.loadHistorialId();
+                    Historial historial = new Historial(idHistorial, userId, "Venta", LocalDate.now(), id, "venta de " + cantidad + " unidades del producto " + producto.getNombre(), "Productos");
+                    HistorialRepository.crearHistorial(historial);
+                    HistorialService.actualizarIds();
+                    break;
+                }
+            }
+        }
+    }
+
+    public static void actualizarCompraCantidadProducto(int id, int cantidad, int userId) {
+        for (Producto producto : productos) {
+            if (producto.getId() == id) {
+                if (producto.getCantidad() + cantidad == producto.getMaxima()) {
+                    System.out.println("la compra sobrepasa el limite de  " + producto.getMaxima() + " para el producto " + producto.getNombre());
+                    return;
+                }else{
+                    producto.setCantidad(producto.getCantidad() + cantidad);
+                    guardarProductosEnJSON();
+                    int idHistorial = HistorialService.loadHistorialId();
+                    Historial historial = new Historial(idHistorial, userId, "Compra", LocalDate.now(), id, "compra de " + cantidad + " unidades del producto " + producto.getNombre(), "Productos");
+                    HistorialRepository.crearHistorial(historial);
+                    HistorialService.actualizarIds();
+                    break;
+                }
+            }
+        }
+    }
 
 }
